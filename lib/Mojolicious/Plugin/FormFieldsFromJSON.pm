@@ -25,10 +25,75 @@ sub register {
         select   => 1,
         radio    => 1,
     );
+
+    $app->helper(
+        'validate_form_fields' => sub {
+            my ($c, $file) = @_;
+  
+            return '' if !$file;
+  
+            if ( !$configs{$file} ) {
+                $c->form_fields( $file, only_load => 1 );
+            }
+  
+            return '' if !$configs{$file};
+  
+            my $config = $configs{$file};
+
+            my $validation = $c->validation;
+            $validation->input( $c->tx->req->params->to_hash );
+
+            my %errors;
+  
+            FIELD:
+            for my $field ( @{ $config } ) {
+                if ( 'HASH' ne ref $field ) {
+                    $app->log->error( 'Field definition must be a HASH - skipping field' );
+                    next FIELD;
+                }
+
+                if ( !$field->{validation} ) {
+                    next FIELD;
+                }
+
+                if ( 'HASH' ne ref $field->{validation} ) {
+                    $app->log->warn( 'Validation settings must be a HASH - skipping field' );
+                    next FIELD;
+                }
+
+                my $name = $field->{name} // $field->{label} // '';
+
+                $validation->optional( $name );
+
+                RULE:
+                for my $rule ( keys %{ $field->{validation} } ) {
+                    my @params = ( $field->{validation}->{$rule} );
+                    my $method = $rule;
+
+                    if ( ref $field->{validation}->{$rule} ) {
+                        @params = @{ $field->{validation}->{$rule} };
+                    }
+
+                    eval{
+                        $validation->check( $method, @params );
+                    } or do {
+                        $app->log->error( "Validating $name with rule $method failed: $@" );
+                    };
+
+                    if ( !$validation->is_valid( $name ) ) {
+                        $errors{$name} = 1;
+                        last RULE;
+                    }
+                }
+            }
+
+            return %errors;
+        }
+    );
   
     $app->helper(
         'form_fields' => sub {
-            my ($c, $file) = @_;
+            my ($c, $file, %params) = @_;
   
             return '' if !$file;
   
@@ -49,7 +114,8 @@ sub register {
                     return '';
                 }
             }
-  
+ 
+            return if $params{only_load}; 
             return '' if !$configs{$file};
   
             my $config = $configs{$file};
