@@ -63,7 +63,12 @@ sub register {
 
                 my $name = $field->{name} // $field->{label} // '';
 
-                $validation->optional( $name );
+                if ( $field->{validation}->{required} ) {
+                    $validation->required( $name );
+                }
+                else {
+                    $validation->optional( $name );
+                }
 
                 RULE:
                 for my $rule ( keys %{ $field->{validation} } ) {
@@ -72,6 +77,11 @@ sub register {
 
                     if ( ref $field->{validation}->{$rule} ) {
                         @params = @{ $field->{validation}->{$rule} };
+                    }
+
+                    if ( $method eq 'required' ) {
+                        $validation->required( $name );
+                        next RULE;
                     }
 
                     eval{
@@ -84,6 +94,10 @@ sub register {
                         $errors{$name} = 1;
                         last RULE;
                     }
+                }
+
+                if ( !$validation->is_valid( $name ) ) {
+                    $errors{$name} = 1;
                 }
             }
 
