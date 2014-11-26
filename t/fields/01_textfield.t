@@ -23,7 +23,7 @@ get '/' => sub {
 };
 
 my $t = Test::Mojo->new;
-$t->get_ok('/')->status_is(200)->content_is('Hello Mojo!');
+$t->get_ok('/')->status_is(200)->content_is('<input id="name" name="name" type="text" value="" />');
 
 done_testing();
 
