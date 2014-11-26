@@ -82,12 +82,13 @@ sub _text {
     my ($self, $c, $field) = @_;
 
     my $name  = $field->{name} // $field->{label} // '';
-    my $value = $request{$name} // $field->{data} // '';
+    my $value = $c->stash( $name ) // $request{$name} // $field->{data} // '';
     my $id    = $field->{id} // $name;
+    my %attrs = %{ $field->{attributes} || {} };
 
     return +{
         label => $field->{label} // '',
-        field => $c->text_field( $name, $value, id => $id ),
+        field => $c->text_field( $name, $value, id => $id, %attrs ),
     };
 }
 
@@ -149,6 +150,21 @@ Attributes of the field like "class"
 
 =back
 
+=head1 EXAMPLES
+
+The following sections should give you an idea what's possible with this plugin
+
+=head2 text
+
+=head3 A simple text field
+
+=head3 Set CSS classes
+
+=head2 select
+
+=head2 radio
+
+=head2 checkbox
 
 =head1 SEE ALSO
 
