@@ -158,7 +158,7 @@ sub register {
                 push @fields, $field;
             }
 
-            return @fields;
+            return join "\n\n", @fields;
         }
     );
 }
