@@ -9,6 +9,7 @@ use Carp;
 use File::Spec;
 
 use Mojo::Asset::File;
+use Mojo::Collection;
 use Mojo::JSON qw(decode_json);
 
 our %request;
@@ -153,7 +154,7 @@ sub register {
                 local %request = %{ $c->tx->req->params->to_hash };
   
                 my $sub   = $self->can( '_' . $type );
-                my $field = $self->$sub( $c, $field );
+                my $field = $self->$sub( $c, $field, %params );
                 push @fields, $field;
             }
 
@@ -174,20 +175,113 @@ sub _text {
 }
 
 sub _select {
-    my ($self, $c, $field) = @_;
+    my ($self, $c, $field, %params) = @_;
 
     my $name   = $field->{name} // $field->{label} // '';
-    my @values = $self->_get_select_values( $c, $field );
+
+    my $field_params = $params{$name} || {},
+
+    my %select_params = (
+       disabled => $self->_get_highlighted_values( $field, 'disabled' ),
+       selected => $self->_get_highlighted_values( $field, 'selected' ),
+    );
+
+    my $stash_values = $c->every_param( $name );
+    my $reset;
+    if ( @{ $stash_values || [] } ) {
+        $select_params{selected} = $self->_get_highlighted_values(
+            +{ selected => $stash_values },
+            'selected',
+        );
+        $c->param( $name, '' );
+        $reset = 1;
+    }
+
+    for my $key ( qw/disabled selected/ ) {
+        my $hashref = $self->_get_highlighted_values( $field_params, $key );
+        if ( keys %{ $hashref } ) {
+            $select_params{$key} = $hashref;
+        }
+    }
+
+    my @values = $self->_get_select_values( $c, $field, %select_params );
     my $id     = $field->{id} // $name;
     my %attrs  = %{ $field->{attributes} || {} };
 
-    return $c->select_field( $name, [ @values ], id => $id, %attrs );
+    if ( $field->{multiple} ) {
+        $attrs{multiple} = 'multiple';
+        $attrs{size}     = $field->{size} || 5;
+    }
+
+    my $select_field = $c->select_field( $name, [ @values ], id => $id, %attrs );
+
+    # reset parameters
+    if ( $reset ) {
+        my $single = scalar @{ $stash_values };
+        my $param  = $single == 1 ? $stash_values->[0] : $stash_values;
+        $c->param( $name, $param );
+    }
+
+    return $select_field;
+}
+
+sub _get_highlighted_values {
+    my ($self, $field, $key) = @_;
+
+    return +{} if !$field->{$key};
+
+    my %highlighted;
+
+    if ( !ref $field->{$key} ) {
+        my $value = $field->{$key};
+        $highlighted{$value} = 1;
+    }
+    elsif ( 'ARRAY' eq ref $field->{$key} ) {
+        for my $value ( @{ $field->{$key} } ) {
+            $highlighted{$value} = 1;
+        }
+    }
+
+    return \%highlighted;
 }
 
 sub _get_select_values {
-    my ($self, $c, $field) = @_;
+    my ($self, $c, $field, %params) = @_;
 
-    
+    my $data = $params{data} || $field->{data} || [];
+
+    my @values;
+    if ( 'ARRAY' eq ref $data ) {
+        @values = $self->_transform_array_values( $data, %params );
+    }
+
+    return @values;
+}
+
+sub _transform_array_values {
+    my ($self, $data, %params) = @_;
+
+    my @values;
+    my $numeric = 1;
+
+    for my $value ( @{ $data } ) {
+        if ( $numeric && $value =~ m{[^0-9]} ) {
+            $numeric = 0;
+        }
+
+        my %opts;
+
+        $opts{disabled} = 'disabled' if $params{disabled}->{$value};
+        $opts{selected} = 'selected' if $params{selected}->{$value};
+
+        push @values, [ $value => $value, %opts ];
+    }
+
+    @values = $numeric ?
+        sort{ $a->[0] <=> $b->[0] }@values :
+        sort{ $a->[0] cmp $b->[0] }@values;
+
+    return @values;
 }
 
 sub _radio {
@@ -460,6 +554,7 @@ This creates the following select field:
       <option value="en" disabled="disabled">en</option>
       <option value="jp">jp</option>
   </select>
+
 =head2 radio
 
 =head2 checkbox
