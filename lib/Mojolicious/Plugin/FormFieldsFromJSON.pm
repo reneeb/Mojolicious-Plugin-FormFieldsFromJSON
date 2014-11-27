@@ -337,11 +337,129 @@ This creates the following select field:
       <option value="en" selected="selected">en</option>
   </select>
 
+=head3 Multiselect
+
+  [
+    {
+      "type" : "select",
+      "name" : "languages",
+      "data" : [
+        "de",
+        "en",
+        "cn",
+        "jp"
+      ],
+      "multiple" : 1,
+      "size" : 3
+    }
+  ]
+
+This creates the following select field:
+
+  <select id="languages" name="languages" multiple="multiple" size="3">
+      <option value="cn">cn</option>
+      <option value="de">de</option>
+      <option value="en">en</option>
+      <option value="jp">jp</option>
+  </select>
+
+=head3 Preselect multiple values
+
+  [
+    {
+      "type" : "select",
+      "name" : "languages",
+      "data" : [
+        "de",
+        "en",
+        "cn",
+        "jp"
+      ],
+      "multiple" : 1,
+      "selected" : [ "en", "de" ]
+    }
+  ]
+
+This creates the following select field:
+
+  <select id="language" name="language">
+      <option value="cn">cn</option>
+      <option value="de" selected="selected">de</option>
+      <option value="en" selected="selected">en</option>
+      <option value="jp">jp</option>
+  </select>
+
 =head3 Values != Label
 
-You can define
+  [
+    {
+      "type" : "select",
+      "name" : "language",
+      "data" : {
+        "de" : "German",
+        "en" : "English"
+      }
+    }
+  ]
 
+This creates the following select field:
 
+  <select id="language" name="language">
+      <option value="en">English</option>
+      <option value="de">German</option>
+  </select>
+
+=head3 Option groups
+
+  [
+    {
+      "type" : "select",
+      "name" : "language",
+      "data" : {
+        "EU" : {
+          "de" : "German",
+          "en" : "English"
+        },
+        "Asia" : {
+          "cn" : "Chinese",
+          "jp" : "Japanese"
+        }
+      }
+    }
+  ]
+
+This creates the following select field:
+
+  <select id="language" name="language">
+      <option value="en">English</option>
+      <option value="de">German</option>
+  </select>
+
+=head3 Disable values
+
+  [
+    {
+      "type" : "select",
+      "name" : "languages",
+      "data" : [
+        "de",
+        "en",
+        "cn",
+        "jp"
+      ],
+      "multiple" : 1,
+      "disabled" : [ "en", "de" ]
+    }
+  ]
+
+This creates the following select field:
+
+  <select id="language" name="language">
+      <option value="cn">cn</option>
+      <option value="de" disabled="disabled">de</option>
+      <option value="en" disabled="disabled">en</option>
+      <option value="jp">jp</option>
+  </select>
 =head2 radio
 
 =head2 checkbox
