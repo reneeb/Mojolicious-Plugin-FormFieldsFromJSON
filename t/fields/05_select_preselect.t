@@ -22,33 +22,68 @@ get '/' => sub {
   $c->render(text => $field);
 };
 
-get '/t' => sub {
+get '/test' => sub {
   my $c = shift;
 
-  $c->stash( language => 'de' );
+  $c->param( language => 'de' );
 
   my ($field) = $c->form_fields( $config_name );
   $c->render(text => $field);
 };
 
+get '/set' => sub {
+  my $c = shift;
+  my ($field) = $c->form_fields( $config_name, language => { selected => 'de' } );
+  $c->render(text => $field);
+};
+
+get '/reset' => sub {
+  my $c = shift;
+  my ($field) = $c->form_fields( $config_name, language => { selected => 'de' } );
+  $c->render(text => $c->param('language') . $field );
+};
+
 my $t = Test::Mojo->new;
-$t->get_ok('/')->status_is(200)->content_is(qq~<select id="language" name="language">
-  <option value="cn">cn</option>
-  <option value="de">de</option>
-  <option value="en" selected="selected">en</option>
-</select>~);
+$t->get_ok('/')->status_is(200)->content_is(join '',
+  '<select id="language" name="language">',
+  '<option value="cn">cn</option>',
+  '<option value="de">de</option>',
+  '<option selected="selected" value="en">en</option>',
+  '</select>',
+);
 
-$t->get_ok('/?language=de')->status_is(200)->content_is(qq~<select id="language" name="language">
-  <option value="cn">cn</option>
-  <option value="de" selected="selected">de</option>
-  <option value="en">en</option>
-</select>~);
+$t->get_ok('/?language=de')->status_is(200)->content_is(join '',
+  '<select id="language" name="language">',
+  '<option value="cn">cn</option>',
+  '<option selected="selected" value="de">de</option>',
+  '<option value="en">en</option>',
+  '</select>',
+);
 
-$t->get_ok('/test')->status_is(200)->content_is(qq~<select id="language" name="language">
-  <option value="cn">cn</option>
-  <option value="de" selected="selected">de</option>
-  <option value="en">en</option>
-</select>~);
+$t->get_ok('/test')->status_is(200)->content_is(join '',
+  '<select id="language" name="language">',
+  '<option value="cn">cn</option>',
+  '<option selected="selected" value="de">de</option>',
+  '<option value="en">en</option>',
+  '</select>',
+);
+
+$t->get_ok('/set')->status_is(200)->content_is(join '',
+  '<select id="language" name="language">',
+  '<option value="cn">cn</option>',
+  '<option selected="selected" value="de">de</option>',
+  '<option value="en">en</option>',
+  '</select>',
+);
+
+$t->get_ok('/reset?language=en')->status_is(200)->content_is(join '',
+  'en',
+  '<select id="language" name="language">',
+  '<option value="cn">cn</option>',
+  '<option selected="selected" value="de">de</option>',
+  '<option value="en">en</option>',
+  '</select>',
+);
 
 done_testing();
 

@@ -23,12 +23,14 @@ get '/' => sub {
 };
 
 my $t = Test::Mojo->new;
-$t->get_ok('/')->status_is(200)->content_is(qq~<select id="languages" name="languages" multiple="multiple" size="3">
-  <option value="cn">cn</option>
-  <option value="de">de</option>
-  <option value="en">en</option>
-  <option value="jp">jp</option>
-</select>~);
+$t->get_ok('/')->status_is(200)->content_is(join '',
+  '<select id="languages" multiple="multiple" name="languages" size="3">',
+  '<option value="cn">cn</option>',
+  '<option value="de">de</option>',
+  '<option value="en">en</option>',
+  '<option value="jp">jp</option>',
+  '</select>',
+);
 
 done_testing();
 

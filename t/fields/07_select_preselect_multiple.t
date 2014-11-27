@@ -24,32 +24,38 @@ get '/' => sub {
 
 get '/stash' => sub {
   my $c = shift;
-  $c->stash( languages => [qw/cn jp/] );
+  $c->param( languages => [qw/cn jp/] );
   my ($field) = $c->form_fields( $config_name );
   $c->render(text => $field);
 };
 
 my $t = Test::Mojo->new;
-$t->get_ok('/')->status_is(200)->content_is(qq~<select id="languages" name="languages" multiple="multiple" size="3">
-  <option value="cn">cn</option>
-  <option value="de" selected="selected">de</option>
-  <option value="en" selected="selected">en</option>
-  <option value="jp">jp</option>
-</select>~);
+$t->get_ok('/')->status_is(200)->content_is(join '',
+  '<select id="languages" multiple="multiple" name="languages" size="3">',
+  '<option value="cn">cn</option>',
+  '<option selected="selected" value="de">de</option>',
+  '<option selected="selected" value="en">en</option>',
+  '<option value="jp">jp</option>',
+  '</select>',
+);
 
-$t->get_ok('/?languages=cn;languages=jp')->status_is(200)->content_is(qq~<select id="languages" name="languages" multiple="multiple" size="3">
-  <option value="cn" selected="selected">cn</option>
-  <option value="de">de</option>
-  <option value="en">en</option>
-  <option value="jp" selected="selected">jp</option>
-</select>~);
+$t->get_ok("/?languages=cn&languages=jp")->status_is(200)->content_is(join '',
+  '<select id="languages" multiple="multiple" name="languages" size="3">',
+  '<option selected="selected" value="cn">cn</option>',
+  '<option value="de">de</option>',
+  '<option value="en">en</option>',
+  '<option selected="selected" value="jp">jp</option>',
+  '</select>',
+);
 
-$t->get_ok('/stash')->status_is(200)->content_is(qq~<select id="languages" name="languages" multiple="multiple" size="3">
-  <option value="cn" selected="selected">cn</option>
-  <option value="de">de</option>
-  <option value="en">en</option>
-  <option value="jp" selected="selected">jp</option>
-</select>~);
+$t->get_ok('/stash')->status_is(200)->content_is(join '',
+  '<select id="languages" multiple="multiple" name="languages" size="3">',
+  '<option selected="selected" value="cn">cn</option>',
+  '<option value="de">de</option>',
+  '<option value="en">en</option>',
+  '<option selected="selected" value="jp">jp</option>',
+  '</select>',
+);
 
 done_testing();
 
