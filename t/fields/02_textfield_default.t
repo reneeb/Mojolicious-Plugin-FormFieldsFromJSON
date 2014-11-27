@@ -18,14 +18,14 @@ $config_name    =~ s{\.t \z }{}xms;
 
 get '/' => sub {
   my $c = shift;
-  my $textfield = $c->form_fields( $config_name );
+  my ($textfield) = $c->form_fields( $config_name );
   $c->render(text => $textfield);
 };
 
 get '/stash' => sub {
   my $c = shift;
   $c->stash( name => 'stashvalue' );
-  my $textfield = $c->form_fields( $config_name );
+  my ($textfield) = $c->form_fields( $config_name );
   $c->render(text => $textfield);
 };
 
