@@ -133,6 +133,8 @@ sub register {
             return '' if !$configs{$file};
   
             my $config = $configs{$file};
+
+            my @fields;
   
             FIELD:
             for my $field ( @{ $config } ) {
@@ -150,10 +152,12 @@ sub register {
 
                 local %request = %{ $c->tx->req->params->to_hash };
   
-                my $sub        = $self->can( '_' . $type );
-                my $field_data = $self->$sub( $c, $field );
-                return $field_data->{field};
+                my $sub   = $self->can( '_' . $type );
+                my $field = $self->$sub( $c, $field );
+                push @fields, $field;
             }
+
+            return @fields;
         }
     );
 }
@@ -166,10 +170,30 @@ sub _text {
     my $id    = $field->{id} // $name;
     my %attrs = %{ $field->{attributes} || {} };
 
-    return +{
-        label => $field->{label} // '',
-        field => $c->text_field( $name, $value, id => $id, %attrs ),
-    };
+    return $c->text_field( $name, $value, id => $id, %attrs );
+}
+
+sub _select {
+    my ($self, $c, $field) = @_;
+
+    my $name   = $field->{name} // $field->{label} // '';
+    my @values = $self->_get_select_values( $c, $field );
+    my $id     = $field->{id} // $name;
+    my %attrs  = %{ $field->{attributes} || {} };
+
+    return $c->select_field( $name, [ @values ], id => $id, %attrs );
+}
+
+sub _get_select_values {
+    my ($self, $c, $field) = @_;
+
+    
+}
+
+sub _radio {
+}
+
+sub _checkbox {
 }
 
 1;
@@ -241,6 +265,82 @@ The following sections should give you an idea what's possible with this plugin
 =head3 Set CSS classes
 
 =head2 select
+
+=head3 Simple: Value = Label
+
+When you have a list of values for a select field, you can define
+an array reference:
+
+  [
+    {
+      "type" : "select",
+      "name" : "language",
+      "data" : [
+        "de",
+        "en"
+      ]
+    }
+  ]
+
+This creates the following select field:
+
+  <select id="language" name="language">
+      <option value="de">de</option>
+      <option value="en">en</option>
+  </select>
+
+=head3 Preselect a value
+
+You can define
+
+  [
+    {
+      "type" : "select",
+      "name" : "language",
+      "data" : [
+        "de",
+        "en"
+      ],
+      "selected" : "en"
+    }
+  ]
+
+This creates the following select field:
+
+  <select id="language" name="language">
+      <option value="de">de</option>
+      <option value="en" selected="selected">en</option>
+  </select>
+
+If a key named as the select exists in the stash, those values are preselected
+(this overrides the value defined in the .json):
+
+  $c->stash( language => 'en' );
+
+and
+
+  [
+    {
+      "type" : "select",
+      "name" : "language",
+      "data" : [
+        "de",
+        "en"
+      ]
+    }
+  ]
+
+This creates the following select field:
+
+  <select id="language" name="language">
+      <option value="de">de</option>
+      <option value="en" selected="selected">en</option>
+  </select>
+
+=head3 Values != Label
+
+You can define
+
 
 =head2 radio
 
