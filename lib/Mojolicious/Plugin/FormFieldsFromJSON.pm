@@ -273,7 +273,7 @@ sub _transform_hash_values {
     KEY:
     for my $key ( keys %{ $data } ) {
         if ( ref $data->{$key} ) {
-            my @group_values = $self->_get_select_values( $c, $data->{$key}, %params );
+            my @group_values = $self->_get_select_values( $c, +{ data => $data->{$key} }, %params );
             $values[$counter] = Mojo::Collection->new( $key => \@group_values );
             $mapping{$key} = $counter;
         }
