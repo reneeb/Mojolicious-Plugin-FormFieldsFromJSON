@@ -7,6 +7,7 @@ our $VERSION = '0.01';
 
 use Carp;
 use File::Spec;
+use List::Util qw(first);
 
 use Mojo::Asset::File;
 use Mojo::Collection;
@@ -254,8 +255,54 @@ sub _get_select_values {
     if ( 'ARRAY' eq ref $data ) {
         @values = $self->_transform_array_values( $data, %params );
     }
+    elsif( 'HASH' eq ref $data ) {
+        @values = $self->_transform_hash_values( $c, $data, %params );
+    }
 
     return @values;
+}
+
+sub _transform_hash_values {
+    my ($self, $c, $data, %params) = @_;
+
+    my @values;
+    my $numeric = 1;
+    my $counter = 0;
+    my %mapping;
+
+    KEY:
+    for my $key ( keys %{ $data } ) {
+        if ( ref $data->{$key} ) {
+            my @group_values = $self->_get_select_values( $c, $data->{$key}, %params );
+            $values[$counter] = Mojo::Collection->new( $key => \@group_values );
+            $mapping{$key} = $counter;
+        }
+        else {
+            my %opts;
+
+            $opts{disabled} = 'disabled' if $params{disabled}->{$key};
+            $opts{selected} = 'selected' if $params{selected}->{$key};
+
+            $values[$counter] = [ $data->{$key} => $key, %opts ];
+            $mapping{$key}    = $counter;
+        }
+
+        $counter++;
+    }
+
+    if ( first{ $_ =~ m{[^0-9]} }keys %mapping ) {
+        $numeric = 0;
+    }
+
+    my @sorted_keys = $numeric ? 
+        sort { $a <=> $b }keys %mapping :
+        sort { $a cmp $b }keys %mapping;
+
+    my @indexes = @mapping{ @sorted_keys };
+
+    my @sorted_values = @values[ @indexes ];
+
+    return @sorted_values;
 }
 
 sub _transform_array_values {
