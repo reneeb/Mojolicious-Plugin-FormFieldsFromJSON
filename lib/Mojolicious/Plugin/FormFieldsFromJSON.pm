@@ -11,6 +11,7 @@ use List::Util qw(first);
 
 use Mojo::Asset::File;
 use Mojo::Collection;
+use Mojo::ByteStream;
 use Mojo::JSON qw(decode_json);
 
 our %request;
@@ -26,6 +27,7 @@ sub register {
         checkbox => 1,
         select   => 1,
         radio    => 1,
+        hidden   => 1,
     );
 
     $app->helper(
@@ -156,12 +158,23 @@ sub register {
   
                 my $sub   = $self->can( '_' . $type );
                 my $field = $self->$sub( $c, $field, %params );
-                push @fields, $field;
+                push @fields, Mojo::ByteStream->new( $field );
             }
 
             return join "\n\n", @fields;
         }
     );
+}
+
+sub _hidden {
+    my ($self, $c, $field) = @_;
+
+    my $name  = $field->{name} // $field->{label} // '';
+    my $value = $c->stash( $name ) // $request{$name} // $field->{data} // '';
+    my $id    = $field->{id} // $name;
+    my %attrs = %{ $field->{attributes} || {} };
+
+    return $c->hidden_field( $name, $value, id => $id, %attrs );
 }
 
 sub _text {
