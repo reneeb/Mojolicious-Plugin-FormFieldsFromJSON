@@ -1,6 +1,15 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
+0.03 2014-12-03
+
+  [IMPROVEMENTS]
+  * add support for templates: you can define an .epl template where the fields are embedded. That helps to use this plugin with frameworks like bootstrap
+  * add support for hidden fields
+
+  [TESTS]
+  * add test for select field with umlauts
+
 0.02 2014-11-28
 
   [FIXES]
