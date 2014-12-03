@@ -18,6 +18,8 @@ our %request;
 
 sub register {
     my ($self, $app, $config) = @_;
+
+    $config //= {};
   
     my %configs;
     my $dir = $config->{dir} || '.';
@@ -136,12 +138,12 @@ sub register {
             return if $params{only_load}; 
             return '' if !$configs{$file};
   
-            my $config = $configs{$file};
+            my $field_config = $configs{$file};
 
             my @fields;
   
             FIELD:
-            for my $field ( @{ $config } ) {
+            for my $field ( @{ $field_config } ) {
                 if ( 'HASH' ne ref $field ) {
                     $app->log->error( 'Field definition must be an HASH - skipping field' );
                     next FIELD;
@@ -156,9 +158,23 @@ sub register {
 
                 local %request = %{ $c->tx->req->params->to_hash };
   
-                my $sub   = $self->can( '_' . $type );
-                my $field = $self->$sub( $c, $field, %params );
-                push @fields, Mojo::ByteStream->new( $field );
+                my $sub        = $self->can( '_' . $type );
+                my $form_field = $self->$sub( $c, $field, %params );
+
+                $form_field = Mojo::ByteStream->new( $form_field );
+
+                if ( $config->{template} && $type ne 'hidden' ) {
+                    $form_field = Mojo::ByteStream->new(
+                        $c->render_to_string(
+                            inline => $config->{template},
+                            id     => $field->{id} // $field->{name} // $field->{label} // '',
+                            label  => $field->{label} // '',
+                            field  => $form_field,
+                        )
+                    );
+                }
+
+                push @fields, $form_field;
             }
 
             return join "\n\n", @fields;
