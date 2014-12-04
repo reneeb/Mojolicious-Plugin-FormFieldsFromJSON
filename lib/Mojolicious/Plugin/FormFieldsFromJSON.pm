@@ -6,7 +6,9 @@ use Mojo::Base 'Mojolicious::Plugin';
 our $VERSION = '0.05';
 
 use Carp;
+use File::Basename;
 use File::Spec;
+use IO::Dir;
 use List::Util qw(first);
 
 use Mojo::Asset::File;
@@ -32,6 +34,27 @@ sub register {
         hidden   => 1,
         textarea => 1,
         password => 1,
+    );
+
+    my %configfiles;
+    $app->helper(
+        forms => sub {
+            if( %configfiles ) {
+                return sort keys %configfiles;
+            }
+
+            my $dir = IO::Dir->new( $dir );
+
+            FILE:
+            while ( my $file = $dir->read ) {
+                next FILE if $file !~ m{\.json\z};
+                my $filename = basename $file;
+                $filename    =~ s{\.json\z}{};
+                $configfiles{$filename} = 1;
+            }
+
+            return sort keys %configfiles;
+        }
     );
 
     $app->helper(
@@ -513,6 +536,12 @@ See L<Templates|Mojolicious::Plugin::FormFieldsFromJSON/Templates>.
 =head2 form_fields
 
   $controller->form_fields( 'formname' );
+
+=head2 validate_form_fields
+
+=head2 forms
+
+=head2 fields
 
 =head1 FIELD DEFINITIONS
 
