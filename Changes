@@ -1,6 +1,11 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
+0.06 2014-12-04
+
+  [FIXES]
+  * 0.05 included too many files
+
 0.05 2014-12-04
 
   [IMPROVEMENTS]
