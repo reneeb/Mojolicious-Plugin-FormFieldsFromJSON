@@ -30,6 +30,8 @@ sub register {
         select   => 1,
         radio    => 1,
         hidden   => 1,
+        textarea => 1,
+        password => 1,
     );
 
     $app->helper(
@@ -367,6 +369,28 @@ sub _radio {
 sub _checkbox {
 }
 
+sub _textarea {
+    my ($self, $c, $field) = @_;
+
+    my $name  = $field->{name} // $field->{label} // '';
+    my $value = $c->stash( $name ) // $request{$name} // $field->{data} // '';
+    my $id    = $field->{id} // $name;
+    my %attrs = %{ $field->{attributes} || {} };
+
+    return $c->text_area( $name, $value, id => $id, %attrs );
+}
+
+sub _password {
+    my ($self, $c, $field) = @_;
+
+    my $name  = $field->{name} // $field->{label} // '';
+    my $value = $c->stash( $name ) // $request{$name} // $field->{data} // '';
+    my $id    = $field->{id} // $name;
+    my %attrs = %{ $field->{attributes} || {} };
+
+    return $c->password_field( $name, value => $value, id => $id, %attrs );
+}
+
 1;
 
 __END__
@@ -442,6 +466,12 @@ This plugin supports several form fields:
 =item * radio
 
 =item * select
+
+=item * textarea
+
+=item * password
+
+=item * hidden
 
 =back
 
@@ -722,6 +752,67 @@ This creates the following select field:
 =head2 radio
 
 =head2 checkbox
+
+=head2 textarea
+
+This type is very similar to L<text|Mojolicious::Plugin::FormFieldsFromJSON/text>.
+
+=head3 A simple textarea
+
+This is the configuration for a simple text field:
+
+ [
+    {
+        "type" : "textarea",
+        "name" : "message",
+        "data" : "Current message"
+    }
+ ]
+
+And the generated form field looks like
+
+  <textarea id="message" name="message">Current message</textarea>
+
+=head3 A textarea with defined number of columns and rows
+
+This is the configuration for a simple text field:
+
+ [
+    {
+        "type" : "textarea",
+        "name" : "message",
+        "data" : "Current message",
+        "attributes" : {
+            "cols" : 80,
+            "rows" : 10
+        }
+    }
+ ]
+
+And the generated textarea looks like
+
+  <textarea cols="80" id="message" name="message" rows="10">Current message</textarea>
+
+=head2 password
+
+This type is very similar to L<text|Mojolicious::Plugin::FormFieldsFromJSON/text>.
+You can use the very same settings as for text fields, so we show only a simple
+example here:
+
+=head3 A simple password field
+
+This is the configuration for a simple text field:
+
+ [
+    {
+        "type" : "password",
+        "name" : "user_password"
+    }
+ ]
+
+And the generated form field looks like
+
+ <input id="user_password" name="password" type="password" value="" />
 
 =head1 Templates
 
