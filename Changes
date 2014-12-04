@@ -1,6 +1,21 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
+0.04 2014-12-04
+
+  [IMPROVEMENTS]
+  * add support for different templates per input type
+  * add support for templates for a single form field
+
+  [TESTS]
+  * add tests for additional attributes for form fields
+  * add test: templates for two fields
+
+  [DOCUMENTATION]
+  * document configuration of plugin
+  * document template feature
+  * add examples for text fields
+
 0.03 2014-12-03
 
   [IMPROVEMENTS]
