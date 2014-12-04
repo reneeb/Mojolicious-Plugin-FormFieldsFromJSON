@@ -163,10 +163,11 @@ sub register {
 
                 $form_field = Mojo::ByteStream->new( $form_field );
 
-                if ( $config->{template} && $type ne 'hidden' ) {
+                my $template = $field->{template} // $config->{templates}->{$type} // $config->{template};
+                if ( $template && $type ne 'hidden' ) {
                     $form_field = Mojo::ByteStream->new(
                         $c->render_to_string(
-                            inline => $config->{template},
+                            inline => $template,
                             id     => $field->{id} // $field->{name} // $field->{label} // '',
                             label  => $field->{label} // '',
                             field  => $form_field,
