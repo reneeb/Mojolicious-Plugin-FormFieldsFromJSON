@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious::Plugin';
 
 # ABSTRACT: create form fields based on a definition in a JSON file
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use Carp;
 use File::Spec;
@@ -416,8 +416,6 @@ Those fields have the following definition items in common:
 
 =item * data
 
-=item * data_function
-
 =item * attributes
 
 Attributes of the field like "class"
@@ -430,9 +428,60 @@ The following sections should give you an idea what's possible with this plugin
 
 =head2 text
 
+With type I<text> you get a simple text input field.
+
 =head3 A simple text field
 
+This is the configuration for a simple text field:
+
+ [
+    {
+        "label" : "Name",
+        "type" : "text",
+        "name" : "name"
+    }
+ ]
+
+And the generated form field looks like
+
+ <input id="name" name="name" type="text" value="" />
+
 =head3 Set CSS classes
+
+If you want to set a CSS class, you can use the C<attributes> field:
+
+ [
+    {
+        "label" : "Name",
+        "type" : "text",
+        "name" : "name",
+        "attributes" : {
+            "class" : "W75px"
+        }
+    }
+ ]
+
+And the generated form field looks like
+
+ <input class="W75px" id="name" name="name" type="text" value="" />
+
+=head3 Text field with predefined value
+
+Sometimes, you want to predefine a value shown in the text field. Then you can
+use the C<data> field:
+
+ [
+    {
+        "label" : "Name",
+        "type" : "text",
+        "name" : "name",
+        "data" : "default value"
+    }
+ ]
+
+This will generate this input field:
+
+  <input id="name" name="name" type="text" value="default value" />
 
 =head2 select
 
