@@ -1,7 +1,14 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
-0.05 2014-12-??
+0.05 2014-12-04
+
+  [IMPROVEMENTS]
+  * add support for password fields
+  * add support for textareas
+  * add support for radiobuttons
+  * add helper forms() to return a list of json files in configured directory
+  * add helper fields() to return a list of fields of a given form
 
 0.04 2014-12-04
 
