@@ -58,6 +58,24 @@ sub register {
     );
 
     $app->helper(
+        fields => sub {
+            my ($c, $file) = @_;
+
+            if ( !$configs{$file} ) {
+                $c->form_fields( $file, only_load => 1 );
+            }
+
+            my %fields;
+            for my $field ( @{ $configs{$file} } ) {
+                my $name = $field->{label} // $field->{name} // '';
+                $fields{$name} = 1;
+            }
+
+            return sort keys %fields;
+        }
+    );
+
+    $app->helper(
         'validate_form_fields' => sub {
             my ($c, $file) = @_;
   
