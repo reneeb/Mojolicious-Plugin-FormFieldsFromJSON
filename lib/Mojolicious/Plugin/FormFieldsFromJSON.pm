@@ -364,6 +364,67 @@ sub _transform_array_values {
 }
 
 sub _radio {
+    my ($self, $c, $field, %params) = @_;
+
+    my $name  = $field->{name} // $field->{label} // '';
+    my $id    = $field->{id} // $name;
+    my %attrs = %{ $field->{attributes} || {} };
+
+    my $data   = $params{data} // $field->{data} // [];
+    my @values = ref $data ? @{ $data } : ($data);
+
+    my $field_params = $params{$name} || {},
+
+    my %select_params = (
+       disabled => $self->_get_highlighted_values( $field, 'disabled' ),
+       selected => $self->_get_highlighted_values( $field, 'selected' ),
+    );
+
+    my $stash_values = $c->every_param( $name );
+    my $reset;
+    if ( @{ $stash_values || [] } ) {
+        $select_params{selected} = $self->_get_highlighted_values(
+            +{ selected => $stash_values },
+            'selected',
+        );
+        $c->param( $name, '' );
+        $reset = 1;
+    }
+
+    for my $key ( qw/disabled selected/ ) {
+        my $hashref = $self->_get_highlighted_values( $field_params, $key );
+        if ( keys %{ $hashref } ) {
+            $select_params{$key} = $hashref;
+        }
+    }
+
+    my $radiobuttons = '';
+    for my $radio_value ( @values ) {
+        my %value_attributes;
+
+        if ( $select_params{disabled}->{$radio_value} ) {
+            $value_attributes{disabled} = 'disabled';
+        }
+
+        if ( $select_params{selected}->{$radio_value} ) {
+            $value_attributes{checked} = 'checked';
+        }
+
+        $radiobuttons .= $c->radio_button(
+            $name => $radio_value,
+            id => $id,
+            %attrs,
+            %value_attributes,
+        ) . "\n";
+    }
+
+    if ( $reset ) {
+        my $single = scalar @{ $stash_values };
+        my $param  = $single == 1 ? $stash_values->[0] : $stash_values;
+        $c->param( $name, $param );
+    }
+
+    return $radiobuttons;
 }
 
 sub _checkbox {
@@ -750,6 +811,70 @@ This creates the following select field:
   </select>
 
 =head2 radio
+
+For radiobuttons, you can use two ways: You can either configure
+form fields for each value or you can define a list of values in
+the C<data> field. With the first way, you can create radiobuttons
+where the template (if any defined) is applied to each radiobutton.
+With the second way, the radiobuttons are handled as one single 
+field in the template.
+
+=head3 A single radiobutton
+
+Given the configuration
+
+ [
+    {
+        "label" : "Name",
+        "type" : "radio",
+        "name" : "type",
+        "data" : "internal"
+    }
+ ]
+
+You get
+
+
+
+=head3 Two radiobuttons configured seperately
+
+With the configuration
+
+ [
+    {
+        "label" : "Name",
+        "type" : "radio",
+        "name" : "type",
+        "data" : "internal"
+    },
+    {
+        "label" : "Name",
+        "type" : "radio",
+        "name" : "type",
+        "data" : "external"
+    }
+ ]
+
+You get
+
+=head3 Two radiobuttons as a group
+
+And with
+
+ [
+    {
+        "label" : "Name",
+        "type" : "radio",
+        "name" : "type",
+        "data" : ["internal", "external" ]
+    }
+ ]
+
+You get
+
+=head3 Two radiobuttons configured seperately - with template
+
+=head3 Two radiobuttons as a group - with template
 
 =head2 checkbox
 
