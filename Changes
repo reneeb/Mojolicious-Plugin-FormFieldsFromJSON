@@ -1,6 +1,16 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
+0.07 2014-12-05
+
+  [TESTS]
+  * add tests for disabled radiobuttons
+  * add tests for preselected radiobuttons
+
+  [DOCUMENTATION]
+  * More radiobutton examples
+  * Document template variables
+
 0.06 2014-12-04
 
   [FIXES]
