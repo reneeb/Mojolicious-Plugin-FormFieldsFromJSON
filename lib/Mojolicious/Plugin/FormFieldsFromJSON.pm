@@ -1153,6 +1153,26 @@ You get
    
   Country: <select id="country" name="country"><option value="au">au</option></select>
 
+=head2 Template variables
+
+You get three template variables for free:
+
+=over 4
+
+=item * $label
+
+If a label is defined in the field configuration
+
+=item * $field
+
+The form field (HTML)
+
+=item * $id
+
+The id for the field. If no id is defined, the name of the field is set.
+
+=back
+
 =head1 SEE ALSO
 
 L<Mojolicious>, L<Mojolicious::Guides>, L<http://mojolicio.us>.
