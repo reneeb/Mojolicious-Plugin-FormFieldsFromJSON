@@ -1109,6 +1109,139 @@ Field:
 
 =head2 checkbox
 
+For checkboxes, you can use two ways: You can either configure
+form fields for each value or you can define a list of values in
+the C<data> field. With the first way, you can create checkboxes
+where the template (if any defined) is applied to each checkbox.
+With the second way, the checkboxes are handled as one single 
+field in the template.
+
+=head3 A single checkbox
+
+Given the configuration
+
+ [
+    {
+        "label" : "Name",
+        "type" : "checkbox",
+        "name" : "type",
+        "data" : "internal"
+    }
+ ]
+
+You get
+
+
+
+=head3 Two checkboxes configured seperately
+
+With the configuration
+
+ [
+    {
+        "label" : "Name",
+        "type" : "checkbox",
+        "name" : "type",
+        "data" : "internal"
+    },
+    {
+        "label" : "Name",
+        "type" : "checkbox",
+        "name" : "type",
+        "data" : "external"
+    }
+ ]
+
+You get
+
+=head3 Two checkboxes as a group
+
+And with
+
+ [
+    {
+        "label" : "Name",
+        "type" : "checkbox",
+        "name" : "type",
+        "data" : ["internal", "external" ]
+    }
+ ]
+
+You get
+
+=head3 Two checkboxes configured seperately - with template
+
+Define template:
+
+  plugin 'FormFieldsFromJSON' => {
+    dir      => './conf',
+    template => '<%= $label %>: <%= $form %>';
+  };
+
+Config:
+
+ [
+    {
+        "label" : "Name",
+        "type" : "checkbox",
+        "name" : "type",
+        "data" : "internal"
+    },
+    {
+        "label" : "Name",
+        "type" : "checkbox",
+        "name" : "type",
+        "data" : "external"
+    }
+ ]
+
+Fields:
+
+  Name: <input id="type" name="type" type="checkbox" value="internal" />
+  
+  
+  
+  Name: <input id="type" name="type" type="checkbox" value="external" />
+  
+  
+
+=head3 Two checkboxes as a group - with template
+
+Same template definition as above, but given this field config:
+
+ [
+    {
+        "label" : "Name",
+        "type" : "checkbox",
+        "name" : "type",
+        "data" : ["internal", "external" ]
+    }
+ ]
+
+You get this:
+
+  Name: <input id="type" name="type" type="checkbox" value="internal" />
+  <input id="type" name="type" type="checkbox" value="external" />
+
+=head3 Two checkboxes - one checked
+
+Config:
+
+ [
+    {
+        "label" : "Name",
+        "type" : "checkbox",
+        "name" : "type",
+        "data" : ["internal", "external" ],
+        "selected" : ["internal"]
+    }
+ ]
+
+Field:
+
+  <input checked="checked" id="type" name="type" type="checkbox" value="internal" />
+  <input id="type" name="type" type="checkbox" value="external" />
+
 =head2 textarea
 
 This type is very similar to L<text|Mojolicious::Plugin::FormFieldsFromJSON/text>.
