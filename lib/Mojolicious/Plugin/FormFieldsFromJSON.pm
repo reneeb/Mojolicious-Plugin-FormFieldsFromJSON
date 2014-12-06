@@ -553,13 +553,67 @@ See L<Templates|Mojolicious::Plugin::FormFieldsFromJSON/Templates>.
 
 =head2 form_fields
 
+C<form_fields> returns a string with all configured fields "translated" to HTML.
+
   $controller->form_fields( 'formname' );
+
+Given this configuration:
+
+ [
+    {
+        "label" : "Name",
+        "type" : "text",
+        "name" : "name"
+    },
+    {
+        "label" : "City",
+        "type" : "text",
+        "name" : "city"
+    }
+ ]
+
+You'll get
+
+ <input id="name" name="name" type="text" value="" />
+ <input id="city" name="city" type="text" value="" />
 
 =head2 validate_form_fields
 
 =head2 forms
 
+This method returns a list of forms. That means the filenames of all .json files
+in the configured directory.
+
+  my @forms = $controller->forms;
+
+The filenames are returned without the file suffix .json.
+
 =head2 fields
+
+C<fields()> returns a list of fields (label or name).
+
+  my @fieldnames = $controller->fields('formname');
+
+If your configuration looks like
+
+ [
+   {
+     "label" : "Email",
+     "name"  : "email",
+     "type"  : "text"
+   },
+   {
+     "name"  : "password",
+     "type"  : "password"
+   }
+ ]
+
+You get
+
+  (
+    Email,
+    password
+  )
 
 =head1 FIELD DEFINITIONS
 
