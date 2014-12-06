@@ -469,6 +469,67 @@ sub _radio {
 }
 
 sub _checkbox {
+    my ($self, $c, $field, %params) = @_;
+
+    my $name  = $field->{name} // $field->{label} // '';
+    my $id    = $field->{id} // $name;
+    my %attrs = %{ $field->{attributes} || {} };
+
+    my $data   = $params{data} // $field->{data} // [];
+    my @values = ref $data ? @{ $data } : ($data);
+
+    my $field_params = $params{$name} || {},
+
+    my %select_params = (
+       disabled => $self->_get_highlighted_values( $field, 'disabled' ),
+       selected => $self->_get_highlighted_values( $field, 'selected' ),
+    );
+
+    my $stash_values = $c->every_param( $name );
+    my $reset;
+    if ( @{ $stash_values || [] } ) {
+        $select_params{selected} = $self->_get_highlighted_values(
+            +{ selected => $stash_values },
+            'selected',
+        );
+        $c->param( $name, '' );
+        $reset = 1;
+    }
+
+    for my $key ( qw/disabled selected/ ) {
+        my $hashref = $self->_get_highlighted_values( $field_params, $key );
+        if ( keys %{ $hashref } ) {
+            $select_params{$key} = $hashref;
+        }
+    }
+
+    my $checkboxes = '';
+    for my $checkbox_value ( @values ) {
+        my %value_attributes;
+
+        if ( $select_params{disabled}->{$checkbox_value} ) {
+            $value_attributes{disabled} = 'disabled';
+        }
+
+        if ( $select_params{selected}->{$checkbox_value} ) {
+            $value_attributes{checked} = 'checked';
+        }
+
+        $checkboxes .= $c->check_box(
+            $name => $checkbox_value,
+            id => $id,
+            %attrs,
+            %value_attributes,
+        ) . "\n";
+    }
+
+    if ( $reset ) {
+        my $single = scalar @{ $stash_values };
+        my $param  = $single == 1 ? $stash_values->[0] : $stash_values;
+        $c->param( $name, $param );
+    }
+
+    return $checkboxes;
 }
 
 sub _textarea {
@@ -1232,3 +1293,4 @@ The id for the field. If no id is defined, the name of the field is set.
 L<Mojolicious>, L<Mojolicious::Guides>, L<http://mojolicio.us>.
 
 =cut
+
