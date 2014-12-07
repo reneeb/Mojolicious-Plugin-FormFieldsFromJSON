@@ -640,6 +640,11 @@ You'll get
 
 =head2 validate_form_fields
 
+This helper validates the input. It uses the L<Mojolicious::Validator::Validation> and it
+validates all fields defined in the configuration file.
+
+For more details see L<Validation|Mojolicious::Plugin::FormFieldsFromJSON/Validation>.
+
 =head2 forms
 
 This method returns a list of forms. That means the filenames of all .json files
@@ -1420,6 +1425,79 @@ The form field (HTML)
 The id for the field. If no id is defined, the name of the field is set.
 
 =back
+
+=head1 Validation
+
+You can define some validation rules in your config file. And when you call C<validate_form_fields>, the
+fields defined in the configuration file are validated.
+
+L<Mojolicious::Validator::Validation> is shipped with some basic validation checks:
+
+=over 4
+
+=item * in
+
+=item * size
+
+=item * like
+
+=item * equal_to
+
+=back
+
+There is L<Mojolicious::Plugin::AdditionalValidationChecks> with some more basic checks. And you can also
+define your own checks.
+
+The I<validation> field is a hashref where the name of the check is the key
+and the parameters for the check can be defined in the value:
+
+  "validation" : {
+      "size" : [ 2, 5 ]
+  },
+
+This will call C<< ->size(2,5) >>. If you want to pass a single parameter,
+you can set a scalar:
+
+  "validation" : {
+      "equal_to" : "foo"
+  },
+
+=head2 Check a string for its length
+
+This is a simple check for the length of a string
+
+ [
+    {
+        "label" : "Name",
+        "type" : "text",
+        "validation" : {
+            "size" : [ 2, 5 ]
+        },
+        "name" : "name"
+    }
+ ]
+
+Then you can call C<validate_form_fields>:
+
+  my %errors = $c->validate_form_fields( $config_name );
+
+In the returned hash, you get the fieldnames as keys where a validation check fails.
+
+=head2 A mandatory string
+
+If you have mandatory fields, you can define them as required
+
+ [
+    {
+        "label" : "Name",
+        "type" : "text",
+        "validation" : {
+            "required" : "name"
+        },
+        "name" : "name"
+    }
+ ]
+
 
 =head1 SEE ALSO
 
