@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious::Plugin';
 
 # ABSTRACT: create form fields based on a definition in a JSON file
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 use Carp;
 use File::Basename;
@@ -200,9 +200,17 @@ sub register {
                 }
 
                 if ( $config->{global_attributes} && $type ne 'hidden' && 'HASH' eq ref $config->{global_attributes} ) {
+
+                    ATTRIBUTE:
                     for my $attribute ( keys %{ $config->{global_attributes} } ) {
                         $field->{attributes}->{$attribute} //= '';
-                        $field->{attributes}->{$attribute}  .= " " . $config->{global_attributes}->{$attribute};
+
+                        my $field_attr  = $field->{attributes}->{$attribute};
+                        my $global_attr = $config->{global_attributes}->{$attribute};
+
+                        next ATTRIBUTE if $field_attr =~ m{\Q$global_attr};
+
+                        $field->{attributes}->{$attribute}  .= " " . $global_attr;
                     }
                 }
 
