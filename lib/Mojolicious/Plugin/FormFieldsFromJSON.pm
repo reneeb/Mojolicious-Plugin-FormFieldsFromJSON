@@ -192,15 +192,20 @@ sub register {
                     next FIELD;
                 }
   
-                my $type = $field->{type};
+                my $type = lc $field->{type};
   
                 if ( !$valid_types{$type} ) {
                     $app->log->warn( "Invalid field type $type - falling back to 'text'" );
                     $type = 'text';
                 }
 
-                local %request = %{ $c->tx->req->params->to_hash };
-  
+                if ( $config->{global_attributes} && $type ne 'hidden' && 'HASH' eq ref $config->{global_attributes} ) {
+                    for my $attribute ( keys %{ $config->{global_attributes} } ) {
+                        $field->{attributes}->{$attribute} //= '';
+                        $field->{attributes}->{$attribute}  .= " " . $config->{global_attributes}->{$attribute};
+                    }
+                }
+
                 my $sub        = $self->can( '_' . $type );
                 my $form_field = $self->$sub( $c, $field, %params );
 
@@ -221,7 +226,7 @@ sub register {
                 push @fields, $form_field;
             }
 
-            return join "\n\n", @fields;
+            return Mojo::ByteStream->new( join "\n\n", @fields );
         }
     );
 }
