@@ -1,9 +1,14 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
-0.10 2014-12-??
+0.10 2014-12-10
+
+  [IMPROVEMENTS]
+  * add global_attributes config to add attributes to all
+    fields (except hidden fields)
 
   [MISC]
+  * add configuration for travis-ci
 
 0.09 2014-12-07
 
