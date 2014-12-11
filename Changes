@@ -1,7 +1,7 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
-0.11 2014-12-??
+0.11 2014-12-11
 
   [BUGFIX]
   * global attributes were added every request, now it checks if the value
