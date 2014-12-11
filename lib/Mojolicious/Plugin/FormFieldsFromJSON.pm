@@ -192,7 +192,12 @@ sub register {
                     next FIELD;
                 }
   
-                my $type = lc $field->{type};
+                my $type      = lc $field->{type};
+                my $orig_type = $type;
+
+                if ( $config->{alias} && $config->{alias}->{$type} ) {
+                    $type = $config->{alias}->{$type};
+                }
   
                 if ( !$valid_types{$type} ) {
                     $app->log->warn( "Invalid field type $type - falling back to 'text'" );
@@ -219,7 +224,7 @@ sub register {
 
                 $form_field = Mojo::ByteStream->new( $form_field );
 
-                my $template = $field->{template} // $config->{templates}->{$type} // $config->{template};
+                my $template = $field->{template} // $config->{templates}->{$orig_type} // $config->{template};
                 if ( $template && $type ne 'hidden' ) {
                     $form_field = Mojo::ByteStream->new(
                         $c->render_to_string(
