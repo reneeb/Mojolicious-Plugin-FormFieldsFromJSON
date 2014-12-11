@@ -626,6 +626,44 @@ With template you can define type specific templates for the form fields.
 
 See L<Templates|Mojolicious::Plugin::FormFieldsFromJSON/Templates>.
 
+=item * alias
+
+Using aliases can help you a lot. Given you want to have several forms where the user can
+define a color (e.g. by using I<bootstrap-colorpicker>), you don't want to define the special
+templates in each form. Instead you can define those fiels as I<type> "color" and use an alias:
+
+  plugin 'FormFieldsFromJSON' => {
+    template  => '<%= $label %>: <%= $field %>',
+    templates => {
+      color => '<%= $label %> (color): <%= $field %>',
+    },
+    alias => {
+      color => 'text',
+    },
+  };
+
+The alias defines that "color" fields are "text" fields.
+
+So with this configuration
+
+ [
+    {
+        "label" : "Name",
+        "type" : "text",
+        "name" : "name"
+    },
+    {
+        "label" : "Background",
+        "type" : "color",
+        "name" : "background"
+    }
+ ]
+
+You get
+
+     <label for="name">Name:</label><div><input id="name" name="name" type="text" value="" /></div>
+     <label for="background">Background (color):</label><div><input id="background" name="background" type="text" value="" /></div>
+
 =back
 
 =head1 HELPER
