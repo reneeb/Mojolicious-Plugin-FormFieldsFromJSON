@@ -626,6 +626,37 @@ With template you can define type specific templates for the form fields.
 
 See L<Templates|Mojolicious::Plugin::FormFieldsFromJSON/Templates>.
 
+=item * global_attributes
+
+With I<global_attributes>, you can define attributes that should be set for every field 
+(except hidden fields)
+
+  plugin 'FormFieldsFromJSON' => {
+    global_attributes => {
+      class => 'important-field',
+    },
+  };
+
+So with this configuration
+
+ [
+    {
+        "label" : "Name",
+        "type" : "text",
+        "name" : "name"
+    },
+    {
+        "label" : "Background",
+        "type" : "text",
+        "name" : "background"
+    }
+ ]
+
+You get
+
+     <input class="important-field" id="name" name="name" type="text" value="" />
+     <input class="important-field" id="background" name="background" type="text" value="" />
+
 =item * alias
 
 Using aliases can help you a lot. Given you want to have several forms where the user can
