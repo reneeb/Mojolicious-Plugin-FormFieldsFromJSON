@@ -111,26 +111,43 @@ sub register {
                     next FIELD;
                 }
 
-                my $name = $field->{name} // $field->{label} // '';
+                my $name         = $field->{name} // $field->{label} // '';
+                my $global_error = 1;
 
                 if ( $field->{validation}->{required} ) {
                     $validation->required( $name );
+
+                    my $value  = $field->{validation}->{required};
+                    if ( ref $value && 'HASH' eq ref $value ) {
+                        $global_error = $value->{msg} // 1;
+                    }
                 }
                 else {
                     $validation->optional( $name );
                 }
 
                 RULE:
-                for my $rule ( keys %{ $field->{validation} } ) {
+                for my $rule ( sort keys %{ $field->{validation} } ) {
                     last RULE if !defined $params->{$name};
 
                     next RULE if $rule eq 'required';
 
-                    my @params = ( $field->{validation}->{$rule} );
+                    my $value  = $field->{validation}->{$rule};
+                    my $ref    = ref $value;
                     my $method = $rule;
+                    my $error  = 1;
 
-                    if ( ref $field->{validation}->{$rule} ) {
-                        @params = @{ $field->{validation}->{$rule} };
+                    my @params;
+
+                    if ( !$ref ) {
+                        @params = $value;
+                    }
+                    elsif ( $ref eq 'ARRAY' ) {
+                        @params = @{ $value };
+                    }
+                    elsif ( $ref eq 'HASH' ) {
+                        @params = ref $value->{args} ? @{ $value->{args} } : $value->{args};
+                        $error  = $value->{msg} // 1;
                     }
 
                     eval{
@@ -141,13 +158,13 @@ sub register {
                     };
 
                     if ( $validation->has_error( $name ) ) {
-                        $errors{$name} = 1;
+                        $errors{$name} = $error;
                         last RULE;
                     }
                 }
 
-                if ( $validation->has_error( $name ) ) {
-                    $errors{$name} = 1;
+                if ( $validation->has_error( $name ) && !defined $errors{$name} ) {
+                    $errors{$name} = $global_error;
                 }
             }
 
@@ -1601,6 +1618,8 @@ you can set a scalar:
       "equal_to" : "foo"
   },
 
+Validation checks are done in asciibetical order.
+
 =head2 Check a string for its length
 
 This is a simple check for the length of a string
@@ -1637,6 +1656,31 @@ If you have mandatory fields, you can define them as required
     }
  ]
 
+=head2 Provide your own error message
+
+With the simple configuration seen above, the C<%error> hash contains the value "1" for
+each invalid field. If you want to get a better error message, you can define a hash
+in the validation config
+
+ [
+    {
+        "label" : "Name",
+        "type" : "text",
+        "validation" : {
+            "like" : { "args" : [ "es" ], "msg" : "text must contain 'es'" },
+            "size" : { "args" : [ 2, 5 ], "msg" : "length must be between 2 and 5 chars" }
+        },
+        "name" : "name"
+    }
+ ]
+
+Examples:
+
+  text   | error
+  -------+---------------------------------
+  test   |
+  t      | text must contain 'es'
+  tester | length must be between 2 and 5 chars
 
 =head1 SEE ALSO
 
