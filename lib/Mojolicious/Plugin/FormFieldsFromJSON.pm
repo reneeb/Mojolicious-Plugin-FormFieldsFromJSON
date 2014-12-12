@@ -476,6 +476,10 @@ sub _radio {
             %attrs,
             %value_attributes,
         ) . "\n";
+
+        if ( defined $field->{after_element} ) {
+            $radiobuttons .= $field->{after_element};
+        }
     }
 
     if ( $reset ) {
@@ -540,6 +544,10 @@ sub _checkbox {
             %attrs,
             %value_attributes,
         ) . "\n";
+
+        if ( defined $field->{after_element} ) {
+            $checkboxes .= $field->{after_element};
+        }
     }
 
     if ( $reset ) {
@@ -1200,6 +1208,27 @@ Field:
   <input checked="checked" id="type" name="type" type="radio" value="internal" />
   <input id="type" name="type" type="radio" value="external" />
 
+=head3 Radiobuttons with HTML after every element
+
+When you want to add some HTML code after every element - e.g. a C<< <br /> >> -
+you can use I<after_element>
+
+ [
+    {
+        "label" : "Name",
+        "type" : "radio",
+        "name" : "type",
+        "after_element" : "<br />",
+        "data" : ["internal", "external" ]
+    }
+ ]
+
+Fields:
+
+  <input id="type" name="type" type="radio" value="internal" />
+  <br /><input id="type" name="type" type="radio" value="external" />
+  <br />
+
 =head2 checkbox
 
 For checkboxes, you can use two ways: You can either configure
@@ -1334,6 +1363,28 @@ Field:
 
   <input checked="checked" id="type" name="type" type="checkbox" value="internal" />
   <input id="type" name="type" type="checkbox" value="external" />
+
+=head3 Checkboxes with HTML after every element
+
+When you want to add some HTML code after every element - e.g. a C<< <br /> >> -
+you can use I<after_element>
+
+ [
+    {
+        "label" : "Name",
+        "type" : "checkbox",
+        "name" : "type",
+        "after_element" : "<br />",
+        "data" : ["internal", "external", "unknown" ]
+    }
+ ]
+
+Fields:
+
+  <input id="type" name="type" type="checkbox" value="internal" />
+  <br /><input id="type" name="type" type="checkbox" value="external" />
+  <br /><input id="type" name="type" type="checkbox" value="unknown" />
+  <br />
 
 =head2 textarea
 
