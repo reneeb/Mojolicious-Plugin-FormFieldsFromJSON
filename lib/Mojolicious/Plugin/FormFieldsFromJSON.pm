@@ -90,7 +90,8 @@ sub register {
             my $config = $configs{$file};
 
             my $validation = $c->validation;
-            $validation->input( $c->tx->req->params->to_hash );
+            my $params     = $c->tx->req->params->to_hash;
+            $validation->input( $params );
 
             my %errors;
   
@@ -121,6 +122,10 @@ sub register {
 
                 RULE:
                 for my $rule ( keys %{ $field->{validation} } ) {
+                    last RULE if !defined $params->{$name};
+
+                    next RULE if $rule eq 'required';
+
                     my @params = ( $field->{validation}->{$rule} );
                     my $method = $rule;
 
@@ -128,24 +133,20 @@ sub register {
                         @params = @{ $field->{validation}->{$rule} };
                     }
 
-                    if ( $method eq 'required' ) {
-                        $validation->required( $name );
-                        next RULE;
-                    }
-
                     eval{
                         $validation->check( $method, @params );
+                        1;
                     } or do {
                         $app->log->error( "Validating $name with rule $method failed: $@" );
                     };
 
-                    if ( !$validation->is_valid( $name ) ) {
+                    if ( $validation->has_error( $name ) ) {
                         $errors{$name} = 1;
                         last RULE;
                     }
                 }
 
-                if ( !$validation->is_valid( $name ) ) {
+                if ( $validation->has_error( $name ) ) {
                     $errors{$name} = 1;
                 }
             }
