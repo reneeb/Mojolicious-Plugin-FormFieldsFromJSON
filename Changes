@@ -1,6 +1,21 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
+0.13 2014-12-12
+
+  [IMPROVEMENTS]
+  * add "after_element" config option for checkboxes and radiobuttons that
+    allows to add arbitrary HTML code after every field in the given group
+  * enhance validations config option to allow hashref as value for a check
+    to provide error messages
+
+  [BUGFIX]
+  * an error was reported for optional fields when additional checks were defined
+  * is_valid is false for unset optional fields -> switched to has_error
+
+  [TESTS]
+  * add more tests for validation feature
+
 0.12 2014-12-11
 
   [IMPROVEMENTS]
