@@ -1,6 +1,12 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
+0.14 2014-12-12
+
+  [BUGFIX]
+  * When global_attributes defined attributes that didn't exist in field config, an unnecessary
+    space was in the value. That can lead to some trouble.
+
 0.13 2014-12-12
 
   [IMPROVEMENTS]
