@@ -1,6 +1,11 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
+0.15 2014-12-14
+
+  [IMPROVEMENTS]
+  * add config option to show labels at radiobuttons and checkboxes
+
 0.14 2014-12-12
 
   [BUGFIX]
