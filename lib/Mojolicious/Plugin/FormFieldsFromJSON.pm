@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious::Plugin';
 
 # ABSTRACT: create form fields based on a definition in a JSON file
 
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
 use Carp;
 use File::Basename;
@@ -489,12 +489,17 @@ sub _radio {
             $value_attributes{checked} = 'checked';
         }
 
+        my $local_label = '';
+        if ( $field->{show_value} ) {
+            $local_label = " " . $radio_value;
+        }
+
         $radiobuttons .= $c->radio_button(
             $name => $radio_value,
             id => $id,
             %attrs,
             %value_attributes,
-        ) . "\n";
+        ) . "$local_label\n";
 
         if ( defined $field->{after_element} ) {
             $radiobuttons .= $field->{after_element};
@@ -557,12 +562,17 @@ sub _checkbox {
             $value_attributes{checked} = 'checked';
         }
 
+        my $local_label = '';
+        if ( $field->{show_value} ) {
+            $local_label = " " . $checkbox_value;
+        }
+
         $checkboxes .= $c->check_box(
             $name => $checkbox_value,
             id => $id,
             %attrs,
             %value_attributes,
-        ) . "\n";
+        ) . "$local_label\n";
 
         if ( defined $field->{after_element} ) {
             $checkboxes .= $field->{after_element};
@@ -1248,6 +1258,25 @@ Fields:
   <br /><input id="type" name="type" type="radio" value="external" />
   <br />
 
+=head3 Radiobuttons with values shown as label
+
+When you want to show the value as a label, you can use I<show_value>.
+
+ [
+    {
+        "label" : "Name",
+        "type" : "radio",
+        "name" : "type",
+        "show_value" : 1,
+        "data" : ["internal", "external" ]
+    }
+ ]
+
+Creates
+
+  <input id="type" name="type" type="radio" value="internal" /> internal
+  <input id="type" name="type" type="radio" value="external" /> external
+
 =head2 checkbox
 
 For checkboxes, you can use two ways: You can either configure
@@ -1404,6 +1433,25 @@ Fields:
   <br /><input id="type" name="type" type="checkbox" value="external" />
   <br /><input id="type" name="type" type="checkbox" value="unknown" />
   <br />
+
+=head3 Checkboxes with values shown as label
+
+When you want to show the value as a label, you can use I<show_value>.
+
+ [
+    {
+        "label" : "Name",
+        "type" : "checkbox",
+        "name" : "type",
+        "show_value" : 1,
+        "data" : ["internal", "external" ]
+    }
+ ]
+
+Creates
+
+  <input id="type" name="type" type="checkbox" value="internal" /> internal
+  <input id="type" name="type" type="checkbox" value="external" /> external
 
 =head2 textarea
 
