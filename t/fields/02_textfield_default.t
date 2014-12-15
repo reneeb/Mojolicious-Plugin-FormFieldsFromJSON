@@ -24,7 +24,7 @@ get '/' => sub {
 
 get '/stash' => sub {
   my $c = shift;
-  $c->param( name => 'stashvalue' );
+  $c->stash( name => 'stashvalue' );
   my ($textfield) = $c->form_fields( $config_name );
   $c->render(text => $textfield);
 };

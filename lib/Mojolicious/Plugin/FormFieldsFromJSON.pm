@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious::Plugin';
 
 # ABSTRACT: create form fields based on a definition in a JSON file
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 use Carp;
 use File::Basename;
@@ -15,8 +15,6 @@ use Mojo::Asset::File;
 use Mojo::Collection;
 use Mojo::ByteStream;
 use Mojo::JSON qw(decode_json);
-
-our %request;
 
 sub register {
     my ($self, $app, $config) = @_;
@@ -279,7 +277,7 @@ sub _hidden {
     my ($self, $c, $field, %params) = @_;
 
     my $name  = $field->{name} // $field->{label} // '';
-    my $value = $params{$name}->{data} // $c->stash( $name ) // $c->param( $name ) // $request{$name} // $field->{data} // '';
+    my $value = $params{$name}->{data} // $c->stash( $name ) // $c->param( $name ) // $field->{data} // '';
     my $id    = $field->{id} // $name;
     my %attrs = %{ $field->{attributes} || {} };
 
@@ -290,7 +288,7 @@ sub _text {
     my ($self, $c, $field, %params) = @_;
 
     my $name  = $field->{name} // $field->{label} // '';
-    my $value = $params{$name}->{data} // $c->stash( $name ) // $c->param( $name ) // $request{$name} // $field->{data} // '';
+    my $value = $params{$name}->{data} // $c->stash( $name ) // $c->param( $name ) // $field->{data} // '';
     my $id    = $field->{id} // $name;
     my %attrs = %{ $field->{attributes} || {} };
 
@@ -621,7 +619,7 @@ sub _textarea {
     my ($self, $c, $field, %params) = @_;
 
     my $name  = $field->{name} // $field->{label} // '';
-    my $value = $params{$name}->{data} // $c->stash( $name ) // $c->param( $name ) // $request{$name} // $field->{data} // '';
+    my $value = $params{$name}->{data} // $c->stash( $name ) // $c->param( $name ) // $field->{data} // '';
     my $id    = $field->{id} // $name;
     my %attrs = %{ $field->{attributes} || {} };
 
@@ -632,7 +630,7 @@ sub _password {
     my ($self, $c, $field, %params) = @_;
 
     my $name  = $field->{name} // $field->{label} // '';
-    my $value = $params{$name}->{data} // $c->stash( $name ) // $c->param( $name ) // $request{$name} // $field->{data} // '';
+    my $value = $params{$name}->{data} // $c->stash( $name ) // $c->param( $name ) // $field->{data} // '';
     my $id    = $field->{id} // $name;
     my %attrs = %{ $field->{attributes} || {} };
 
