@@ -24,6 +24,7 @@ get '/' => sub {
 
 my $t = Test::Mojo->new;
 $t->get_ok('/')->status_is(200)->content_is('<input id="ProjectID" name="ProjectID" type="hidden" value="test" />');
+$t->get_ok('/?ProjectID=2')->status_is(200)->content_is('<input id="ProjectID" name="ProjectID" type="hidden" value="2" />');
 
 done_testing();
 

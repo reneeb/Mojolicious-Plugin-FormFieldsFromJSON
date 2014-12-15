@@ -18,21 +18,21 @@ $config_name    =~ s{\.t \z }{}xms;
 
 get '/' => sub {
   my $c = shift;
-  my ($textfield) = $c->form_fields( $config_name );
+  my ($textfield) = $c->form_fields( $config_name, name => { data => 'default value' } );
   $c->render(text => $textfield);
 };
 
 get '/stash' => sub {
   my $c = shift;
-  $c->param( name => 'stashvalue' );
-  my ($textfield) = $c->form_fields( $config_name );
+  $c->stash( name => 'stashvalue' );
+  my ($textfield) = $c->form_fields( $config_name, name => { data => 'test' } );
   $c->render(text => $textfield);
 };
 
 my $t = Test::Mojo->new;
 $t->get_ok('/')->status_is(200)->content_is('<input id="name" name="name" type="text" value="default value" />');
 $t->get_ok('/?name=test')->status_is(200)->content_is('<input id="name" name="name" type="text" value="test" />');
-$t->get_ok('/stash')->status_is(200)->content_is('<input id="name" name="name" type="text" value="stashvalue" />');
+$t->get_ok('/stash')->status_is(200)->content_is('<input id="name" name="name" type="text" value="test" />');
 
 done_testing();
 

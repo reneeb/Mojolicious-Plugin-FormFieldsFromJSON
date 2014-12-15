@@ -18,17 +18,13 @@ $config_name    =~ s{\.t \z }{}xms;
 
 get '/' => sub {
   my $c = shift;
-  my ($textfield) = $c->form_fields( $config_name );
+  my ($textfield) = $c->form_fields( $config_name, ProjectID => { data => 'test' } );
   $c->render(text => $textfield);
 };
 
 my $t = Test::Mojo->new;
-$t->get_ok('/')->status_is(200)->content_is(
-  '<textarea id="message" name="message">Current message</textarea>'
-);
-$t->get_ok('/?message=test')->status_is(200)->content_is(
-  '<textarea id="message" name="message">test</textarea>'
-);
+$t->get_ok('/')->status_is(200)->content_is('<input id="ProjectID" name="ProjectID" type="hidden" value="test" />');
+$t->get_ok('/?ProjectID=1')->status_is(200)->content_is('<input id="ProjectID" name="ProjectID" type="hidden" value="test" />');
 
 done_testing();
 

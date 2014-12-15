@@ -24,6 +24,7 @@ get '/' => sub {
 
 my $t = Test::Mojo->new;
 $t->get_ok('/')->status_is(200)->content_is('<input id="name" name="name" type="password" value="" />');
+$t->get_ok('/?name=test')->status_is(200)->content_is('<input id="name" name="name" type="password" value="test" />');
 
 done_testing();
 

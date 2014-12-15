@@ -18,16 +18,13 @@ $config_name    =~ s{\.t \z }{}xms;
 
 get '/' => sub {
   my $c = shift;
-  my ($textfield) = $c->form_fields( $config_name );
+  my ($textfield) = $c->form_fields( $config_name, message => { data => 'Current message' } );
   $c->render(text => $textfield);
 };
 
 my $t = Test::Mojo->new;
 $t->get_ok('/')->status_is(200)->content_is(
   '<textarea id="message" name="message">Current message</textarea>'
-);
-$t->get_ok('/?message=test')->status_is(200)->content_is(
-  '<textarea id="message" name="message">test</textarea>'
 );
 
 done_testing();
