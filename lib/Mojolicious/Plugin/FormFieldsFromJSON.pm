@@ -740,6 +740,32 @@ You get
      <label for="name">Name:</label><div><input id="name" name="name" type="text" value="" /></div>
      <label for="background">Background (color):</label><div><input id="background" name="background" type="text" value="" /></div>
 
+=item * translate_labels
+
+If I<translate_labels> is true, the labels for the templates are translated. You have to provide a
+I<translation_method|Mojolicious::Plugin::FormFieldsFromJSON/Translation_method>, too.
+
+  plugin 'FormFieldsFromJSON' => {
+    template           => '<%= $label %>: <%= $field %>',
+    translate_labels   => 1,
+    translation_method => \&loc,
+  };
+
+For more details see I<Translation|Mojolicious::Plugin::FormFieldsFromJSON/Translation>.
+
+=item * translation_method
+
+If I<translate_labels> is true, the labels for the templates are translated. You have to provide a
+I<translation_method|Mojolicious::Plugin::FormFieldsFromJSON/Translation_method>, too.
+
+  plugin 'FormFieldsFromJSON' => {
+    template           => '<%= $label %>: <%= $field %>',
+    translate_labels   => 1,
+    translation_method => \&loc,
+  };
+
+For more details see I<Translation|Mojolicious::Plugin::FormFieldsFromJSON/Translation>.
+
 =back
 
 =head1 HELPER
@@ -1738,6 +1764,83 @@ Examples:
   test   |
   t      | text must contain 'es'
   tester | length must be between 2 and 5 chars
+
+=head1 Translation
+
+Most webapplications nowadays are internationalized, therefor this module
+provides some support for translations.
+
+If I<translate_labels> is set to a true value, a template is used and
+I<translation_method> is given, the labels are translated.
+
+=head2 translation_method
+
+I<translation_method> has to be a reference to a subroutine.
+
+=head3 An example for translation
+
+Load and configure the plugin:
+
+  plugin 'FormFieldsFromJSON' => {
+    dir                => File::Spec->catdir( dirname( __FILE__ ) || '.', 'conf' ),
+    template           => '<label for="<%= $id %>"><%= $label %>:</label><div><%= $field %></div>',
+    translate_labels   => 1,
+    translation_method => \&loc,
+  };
+
+The translation method gets two parameters:
+
+=over 4
+
+=item * the controller object
+
+=item * the label
+
+=back
+
+  sub loc {
+      my ($c, $value) = @_;
+  
+      my %translation = ( Address => 'Adresse' );
+      return $translation{$value} // $value;
+  };
+
+This can be a more complex subroutine that makes use of any translation framework.
+
+Given this field configuration file:
+
+ [
+    {
+        "label" : "Address",
+        "type" : "text",
+        "name" : "name"
+    }
+ ]
+
+You'll get
+
+  <label for="name">Adresse:</label><div><input id="name" name="name" type="text" value="" /></div>
+
+=head2 Internationalization
+
+There is more about internationalization (i18n) than just translation. There are
+dates, ranges, order of characters etc. But that can't be covered within this
+single module. There are more Mojolicious plugins that provide more features
+about i18n:
+
+=over 4
+
+=item * L<Mojolicious::Plugin::I18N>
+
+=item * L<Mojolicious::Plugin::TagHelpersI18N>
+
+=item * L<Mojolicious::Plugin::I18NUtils>
+
+=item * L<Mojolicious::Plugin::CountryDropDown>
+
+=back
+
+You can combine these plugins with this plugin.
 
 =head1 SEE ALSO
 
