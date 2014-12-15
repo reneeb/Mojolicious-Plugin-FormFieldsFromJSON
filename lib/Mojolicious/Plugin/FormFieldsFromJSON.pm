@@ -276,10 +276,10 @@ sub register {
 }
 
 sub _hidden {
-    my ($self, $c, $field) = @_;
+    my ($self, $c, $field, %params) = @_;
 
     my $name  = $field->{name} // $field->{label} // '';
-    my $value = $c->stash( $name ) // $request{$name} // $field->{data} // '';
+    my $value = $params{$name}->{data} // $c->stash( $name ) // $c->param( $name ) // $request{$name} // $field->{data} // '';
     my $id    = $field->{id} // $name;
     my %attrs = %{ $field->{attributes} || {} };
 
@@ -287,10 +287,10 @@ sub _hidden {
 }
 
 sub _text {
-    my ($self, $c, $field) = @_;
+    my ($self, $c, $field, %params) = @_;
 
     my $name  = $field->{name} // $field->{label} // '';
-    my $value = $c->stash( $name ) // $request{$name} // $field->{data} // '';
+    my $value = $params{$name}->{data} // $c->stash( $name ) // $c->param( $name ) // $request{$name} // $field->{data} // '';
     my $id    = $field->{id} // $name;
     my %attrs = %{ $field->{attributes} || {} };
 
@@ -325,6 +325,10 @@ sub _select {
         if ( keys %{ $hashref } ) {
             $select_params{$key} = $hashref;
         }
+    }
+
+    if ( $field_params->{data} ) {
+        $select_params{data} = $field_params->{data};
     }
 
     my @values = $self->_get_select_values( $c, $field, %select_params );
@@ -460,7 +464,7 @@ sub _radio {
     my $id    = $field->{id} // $name;
     my %attrs = %{ $field->{attributes} || {} };
 
-    my $data   = $params{data} // $field->{data} // [];
+    my $data   = $params{$name}->{data} // $field->{data} // [];
     my @values = ref $data ? @{ $data } : ($data);
 
     my $field_params = $params{$name} || {},
@@ -540,7 +544,7 @@ sub _checkbox {
     my $id    = $field->{id} // $name;
     my %attrs = %{ $field->{attributes} || {} };
 
-    my $data   = $params{data} // $field->{data} // [];
+    my $data   = $params{$name}->{data} // $field->{data} // [];
     my @values = ref $data ? @{ $data } : ($data);
 
     my $field_params = $params{$name} || {},
@@ -614,10 +618,10 @@ sub _checkbox {
 }
 
 sub _textarea {
-    my ($self, $c, $field) = @_;
+    my ($self, $c, $field, %params) = @_;
 
     my $name  = $field->{name} // $field->{label} // '';
-    my $value = $c->stash( $name ) // $request{$name} // $field->{data} // '';
+    my $value = $params{$name}->{data} // $c->stash( $name ) // $c->param( $name ) // $request{$name} // $field->{data} // '';
     my $id    = $field->{id} // $name;
     my %attrs = %{ $field->{attributes} || {} };
 
@@ -625,10 +629,10 @@ sub _textarea {
 }
 
 sub _password {
-    my ($self, $c, $field) = @_;
+    my ($self, $c, $field, %params) = @_;
 
     my $name  = $field->{name} // $field->{label} // '';
-    my $value = $c->stash( $name ) // $request{$name} // $field->{data} // '';
+    my $value = $params{$name}->{data} // $c->stash( $name ) // $c->param( $name ) // $request{$name} // $field->{data} // '';
     my $id    = $field->{id} // $name;
     my %attrs = %{ $field->{attributes} || {} };
 
