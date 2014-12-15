@@ -239,6 +239,10 @@ sub register {
                     }
                 }
 
+                if ( $field->{translate_sublabels} && $config->{translation_method} && !$field->{translation_method} ) {
+                    $field->{translation_method} = $config->{translation_method};
+                }
+
                 my $sub        = $self->can( '_' . $type );
                 my $form_field = $self->$sub( $c, $field, %params );
 
@@ -498,8 +502,15 @@ sub _radio {
 
         my $local_label = '';
         if ( $field->{show_value} ) {
-            $local_label = " " . $radio_value;
+            $local_label = $radio_value;
         }
+
+        my $loc = $field->{translation_method};
+        if ( length $local_label && $field->{translate_sublabels} && $loc && 'CODE' eq ref $loc ) {
+            $local_label = $loc->($c, $local_label);
+        }
+
+        $local_label = " " . $local_label if length $local_label;
 
         $radiobuttons .= $c->radio_button(
             $name => $radio_value,
@@ -571,8 +582,15 @@ sub _checkbox {
 
         my $local_label = '';
         if ( $field->{show_value} ) {
-            $local_label = " " . $checkbox_value;
+            $local_label = $checkbox_value;
         }
+
+        my $loc = $field->{translation_method};
+        if ( length $local_label && $field->{translate_sublabels} && $loc && 'CODE' eq ref $loc ) {
+            $local_label = $loc->($c, $local_label);
+        }
+
+        $local_label = " " . $local_label if length $local_label;
 
         $checkboxes .= $c->check_box(
             $name => $checkbox_value,
