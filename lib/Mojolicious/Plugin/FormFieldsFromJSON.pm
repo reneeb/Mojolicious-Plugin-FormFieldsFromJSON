@@ -246,11 +246,18 @@ sub register {
 
                 my $template = $field->{template} // $config->{templates}->{$orig_type} // $config->{template};
                 if ( $template && $type ne 'hidden' ) {
+                    my $label = $field->{label} // '';
+                    my $loc   = $config->{translation_method};
+
+                    if ( $config->{translate_labels} && $loc && 'CODE' eq ref $loc ) {
+                        $label = $loc->($c, $label);
+                    }
+
                     $form_field = Mojo::ByteStream->new(
                         $c->render_to_string(
                             inline => $template,
                             id     => $field->{id} // $field->{name} // $field->{label} // '',
-                            label  => $field->{label} // '',
+                            label  => $label,
                             field  => $form_field,
                         )
                     );
