@@ -1,6 +1,12 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
+0.16 2014-12-15
+
+  [IMPROVEMENTS]
+  * translate labels if requested
+  * translate values (when used as labels) of radiobuttons/checkboxes if requested
+
 0.15 2014-12-14
 
   [IMPROVEMENTS]
