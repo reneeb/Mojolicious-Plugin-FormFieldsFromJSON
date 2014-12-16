@@ -1860,7 +1860,8 @@ about i18n:
 
 =back
 
-You can combine these plugins with this plugin.
+You can combine these plugins with this plugin. An example is available at
+L<the code repository|http://github.com/reneeb/Mojolicious-Plugin-FormFieldsFromJSON/tree/master/example>.
 
 =head1 SEE ALSO
 
