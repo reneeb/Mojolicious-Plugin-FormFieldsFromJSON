@@ -1,6 +1,15 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
+0.18 2014-12-16
+
+  [DOCUMENTATION]
+  * document "sublabel" translation
+  * document "data" definition key
+
+  [MISC]
+  * Add example for I18N
+
 0.17 2014-12-15
 
   [BUGFIX]
