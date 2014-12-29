@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious::Plugin';
 
 # ABSTRACT: create form fields based on a definition in a JSON file
 
-our $VERSION = '0.18';
+our $VERSION = '0.19';
 
 use Carp;
 use File::Basename;
@@ -25,6 +25,7 @@ sub register {
     my $dir = $config->{dir} || '.';
   
     my %valid_types = (
+        %{ $config->{types} || {} },
         text     => 1,
         checkbox => 1,
         select   => 1,
