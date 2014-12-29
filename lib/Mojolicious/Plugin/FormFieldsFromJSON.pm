@@ -25,6 +25,7 @@ sub register {
     my $dir = $config->{dir} || '.';
   
     my %valid_types = (
+        %{ $config->{types} || {} },
         text     => 1,
         checkbox => 1,
         select   => 1,
