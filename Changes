@@ -1,6 +1,11 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
+  [IMPROVEMENTS]
+  * use param() and every_param() to get the values for validation.
+    This allows the programmer to change the value before validation
+    and route parameters etc. are respected.
+
 0.19 2014-12-29
 
   [IMPROVEMENTS]
