@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious::Plugin';
 
 # ABSTRACT: create form fields based on a definition in a JSON file
 
-our $VERSION = '0.19';
+our $VERSION = '0.20';
 
 use Carp;
 use File::Basename;
@@ -89,8 +89,8 @@ sub register {
             my $config = $configs{$file};
 
             my $validation = $c->validation;
-            my $params     = $c->tx->req->params->to_hash;
-            $validation->input( $params );
+            my %params     = map{ $_ => $c->every_param( $_ ) }$c->param;
+            $validation->input( \%params );
 
             my %errors;
   
@@ -127,7 +127,7 @@ sub register {
 
                 RULE:
                 for my $rule ( sort keys %{ $field->{validation} } ) {
-                    last RULE if !defined $params->{$name};
+                    last RULE if !defined $params{$name};
 
                     next RULE if $rule eq 'required';
 
