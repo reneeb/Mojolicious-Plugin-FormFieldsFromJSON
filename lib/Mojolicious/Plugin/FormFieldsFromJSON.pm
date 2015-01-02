@@ -242,8 +242,16 @@ sub register {
                     $field->{translation_method} = $config->{translation_method};
                 }
 
+                my %opts;
+                my $class = $field->{datafunctionclass} || $config->{datafunctionclass};
+                my $func  = $field->{datafunction};
+                if ( $class && $func && $class->can( $func ) ) {
+                    my $name = $field->{name} // $field->{label} // '';
+                    $opts{$name}->{data} = $class->$func( $c, $field );
+                }
+
                 my $sub        = $self->can( '_' . $type );
-                my $form_field = $self->$sub( $c, $field, %params );
+                my $form_field = $self->$sub( $c, $field, %opts, %params );
 
                 $form_field = Mojo::ByteStream->new( $form_field );
 

@@ -1,0 +1,14 @@
+ [
+    {
+        "label" : "Address",
+        "type" : "text",
+        "datafunction" : "defaulttext",
+        "name" : "name"
+    },
+    {
+        "label" : "Address",
+        "type" : "text",
+        "datafunction" : "my_default",
+        "name" : "name2"
+    }
+ ]

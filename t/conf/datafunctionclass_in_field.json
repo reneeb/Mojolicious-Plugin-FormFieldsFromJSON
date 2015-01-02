@@ -1,0 +1,16 @@
+ [
+    {
+        "label" : "Address",
+        "type" : "text",
+        "datafunctionclass" : "FunctionTest",
+        "datafunction" : "defaulttext",
+        "name" : "name"
+    },
+    {
+        "label" : "Address",
+        "type" : "text",
+        "datafunctionclass" : "FunctionTest2",
+        "datafunction" : "defaulttext",
+        "name" : "name2"
+    }
+ ]
