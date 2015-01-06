@@ -1,6 +1,12 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
+0.21 2015-01-06
+
+  [IMPROVEMENTS]
+  * Now the fields config can be passed to form_fields(). That
+    way you can create your forms dynamically.
+
 0.20 2015-01-01
 
   [IMPROVEMENTS]
