@@ -177,7 +177,7 @@ sub register {
   
             return '' if !$file;
   
-            if ( !$configs{$file} ) {
+            if ( !$configs{$file} && !ref $file ) {
                 my $path = File::Spec->catfile( $dir, $file . '.json' );
                 return '' if !-r $path;
   
@@ -196,9 +196,9 @@ sub register {
             }
  
             return if $params{only_load}; 
-            return '' if !$configs{$file};
+            return '' if !$configs{$file} && !ref $file;
   
-            my $field_config = $configs{$file};
+            my $field_config = $configs{$file} || $file;
 
             my @fields;
   
