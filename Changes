@@ -1,6 +1,9 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
+  [DOCUMENTATION]
+  * improve documentation of common config settings
+
 0.21 2015-01-06
 
   [IMPROVEMENTS]
