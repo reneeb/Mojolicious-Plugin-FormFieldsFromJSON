@@ -886,9 +886,19 @@ Those fields have the following definition items in common:
 
 =over 4
 
+=item * name
+
+The name of the field. If you do not pass an id for the field in the I<attributes>-field, the name is also
+taken for the field id.
+
 =item * label
 
+If a template is used, this value is passed for C<$label>. If the translation feature is used, the label
+is translated.
+
 =item * type
+
+One of the above mentioned types. Please note, that you can add own types.
 
 =item * data
 
@@ -914,7 +924,24 @@ For I<select>, I<checkbox> and I<radio> fields, I<data> contains the possible va
 
 =item * attributes
 
-Attributes of the field like "class"
+Attributes of the field like "class":
+
+  attributes => {
+    class => 'button'
+  }
+
+If I<global_attributes> are defined, then the values are added, so that
+
+  plugin( 'FormFieldsFromJSON' => {
+    global_attributes => {
+      class => 'button-danger',
+    }
+  });
+
+and the I<attributes> field as shown, then the field has two classes: I<button> and I<button-danger>. In the
+field the classes mentioned in field config come first.
+
+  <button class="button button-danger" ...>
 
 =back
 
