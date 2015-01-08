@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious::Plugin';
 
 # ABSTRACT: create form fields based on a definition in a JSON file
 
-our $VERSION = '0.22';
+our $VERSION = '0.23';
 
 use Carp;
 use File::Basename;
@@ -786,6 +786,29 @@ I<translation_method|Mojolicious::Plugin::FormFieldsFromJSON/Translation_method>
   };
 
 For more details see I<Translation|Mojolicious::Plugin::FormFieldsFromJSON/Translation>.
+
+=item * types
+
+If you have written a plugin that implements a new "type" of input field, you can allow this type by passing
+I<types> when you load the plugin.
+
+  plugin 'FormFieldsFromJSON' => {
+    types => {
+        'testfield' => 1,
+    },
+  };
+
+Now you can use 
+
+  [
+    {
+      "label" : "Name",
+      "type" : "testfield",
+      "name" : "name"
+    }
+  ]
+
+For more details see L<Additional Types|/New Types>.
 
 =back
 
@@ -1980,6 +2003,62 @@ about i18n:
 
 You can combine these plugins with this plugin. An example is available at
 L<the code repository|http://github.com/reneeb/Mojolicious-Plugin-FormFieldsFromJSON/tree/master/example>.
+
+=head2 New Types
+
+The field types supported by this plugin might not enough for you. Then you can create your own plugin
+and add new types. For example, dates in L<OTRS|http://otrs.org> are shown as three dropdowns: one for
+the day, one for the month and finally one for the year.
+
+Wouldn't it be nice to define only one field in your config and the rest is DWIM (Do what I mean)?
+It would.
+
+So you can write your own Mojolicious plugin where the register subroutine does nothing. And you define
+a subroutine called C<Mojolicious::Plugin::FormFieldsFromJSON::_date> where those dropdowns are created.
+
+Then just do:
+
+  plugin 'WhateverYouHaveChosen';
+  plugin 'FormFieldsFromJSON' => {
+    types => {
+        'date' => 1,
+    },
+  };
+
+Now you can use 
+
+  [
+    {
+      "label" : "Release date",
+      "type" : "date",
+      "name" : "release"
+    }
+  ]
+
+The subroutine gets these parameters:
+
+=over 4
+
+=item * The plugin object (Mojolicious::Plugin::FormFieldsFromJSON object)
+
+So you can use the methods defined in this plugin, for example to create
+dropdowns, textfields, ...
+
+=item * The controller object (Whatever controller called C<form_fields> method)
+
+So you can use all the Mojolicious power!
+
+=item * The field config
+
+Whatever you defined in you .json config file for that field
+
+=item * A params hash 
+
+Whatever is passed as parameters to the C<form_fields> method.
+
+=back
+
+As an example, you can see L<Mojolicious::Plugin::FormFieldsFromJSON::Date>.
 
 =head1 SEE ALSO
 
