@@ -840,6 +840,22 @@ You'll get
  <input id="name" name="name" type="text" value="" />
  <input id="city" name="city" type="text" value="" />
 
+=head3 dynamic config
+
+Instead of a formname, you can pass a config:
+
+  $controller->form_fields(
+    [
+      {
+        "label" : "Name",
+        "type" : "testfield",
+        "name" : "name"
+      }
+    ]
+  );
+
+This way, you can build your forms dynamically (e.g. based on database entries).
+
 =head2 validate_form_fields
 
 This helper validates the input. It uses the L<Mojolicious::Validator::Validation> and it
