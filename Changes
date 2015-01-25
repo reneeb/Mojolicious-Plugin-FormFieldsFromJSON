@@ -1,6 +1,11 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
+0.25 2015-01-25
+
+  [TESTS]
+  * as of Mojolicious 5.74 generates valid HTML5 elements, thus <input ... /> => <input ...>
+
 0.24 2015-01-09
 
   [DOCUMENTATION]
