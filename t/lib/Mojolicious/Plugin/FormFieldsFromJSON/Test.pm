@@ -9,7 +9,7 @@ sub Mojolicious::Plugin::FormFieldsFromJSON::_testfield {
     my ($self, $c, $field, %params) = @_;
 
     my $name = $field->{name};
-    return qq~<input id="$name" name="$name" type="test" value="" />~;
+    return $c->input_tag($name, id => $name, type => 'test', value => '');
 }
 
 1;

@@ -29,7 +29,7 @@ my $t = Test::Mojo->new;
 $t->get_ok('/')
   ->status_is(200)
   ->content_is(
-      '<label for="name">Name:</label><div><input id="name" name="name" type="text" value=""$close></div>' . "\n\n\n" .
+      qq~<label for="name">Name:</label><div><input id="name" name="name" type="text" value=""$close></div>\n\n\n~ .
       'Country: <select id="country" name="country"><option value="au">au</option></select>' . "\n"
   );
 

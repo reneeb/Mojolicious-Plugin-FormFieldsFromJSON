@@ -35,9 +35,9 @@ my $t = Test::Mojo->new;
 $t->get_ok('/')
   ->status_is(200)
   ->content_is(
-     '<label for="name">Name:</label><div><input id="name" name="name" type="text" value=""$close></div>'
+     qq~<label for="name">Name:</label><div><input id="name" name="name" type="text" value=""$close></div>~
      . "\n\n\n" .
-     '<label for="expiration">expiration date:</label><div><input id="expiration" name="expiration" type="text" value=""$close></div>' .
+     qq~<label for="expiration">expiration date:</label><div><input id="expiration" name="expiration" type="text" value=""$close></div>~ .
      "\n"
   );
 

@@ -26,8 +26,8 @@ my $close = Mojolicious->VERSION >= 5.74 ? '' : " /";
 
 my $t = Test::Mojo->new;
 $t->get_ok('/')->status_is(200)->content_is(
-  qq~<input id="type" name="type" type="radio" value="internal"$close>~ . "\n" .
-  '<br /><input id="type" name="type" type="radio" value="external"$close>' . "\n" .
+  qq~<input id="type" name="type" type="radio" value="internal"$close>\n~ .
+  qq~<br /><input id="type" name="type" type="radio" value="external"$close>\n~ .
   '<br />'
 );
 
