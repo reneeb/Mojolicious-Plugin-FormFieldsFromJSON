@@ -23,10 +23,12 @@ get '/' => sub {
   $c->render(text => $textfield);
 };
 
+my $close = Mojolicious->VERSION >= 5.74 ? '' : " /";
+
 my $t = Test::Mojo->new;
 $t->get_ok('/')->status_is(200)->content_is(
-  '<input id="type" name="type" type="radio" value="internal" /> intern' . "\n" .
-  '<input id="type" name="type" type="radio" value="external" /> extern' . "\n"
+  '<input id="type" name="type" type="radio" value="internal"$close> intern' . "\n" .
+  '<input id="type" name="type" type="radio" value="external"$close> extern' . "\n"
 );
 
 done_testing();

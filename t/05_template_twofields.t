@@ -23,12 +23,14 @@ get '/' => sub {
   $c->render(text => $textfield);
 };
 
+my $close = Mojolicious->VERSION >= 5.74 ? '' : " /";
+
 my $t = Test::Mojo->new;
 $t->get_ok('/')
   ->status_is(200)
   ->content_is(
-      '<label for="name">Name:</label><div><input id="name" name="name" type="text" value="" /></div>' . "\n\n\n" .
-      '<label for="password">Password:</label><div><input id="password" name="password" type="text" value="" /></div>' . "\n"
+      '<label for="name">Name:</label><div><input id="name" name="name" type="text" value=""$close></div>' . "\n\n\n" .
+      '<label for="password">Password:</label><div><input id="password" name="password" type="text" value=""$close></div>' . "\n"
   );
 
 done_testing();

@@ -25,6 +25,8 @@ get '/' => sub {
   $c->render(text => $fields);
 };
 
+my $close = Mojolicious->VERSION >= 5.74 ? '' : " /";
+
 my $t = Test::Mojo->new;
 $t->get_ok('/')->status_is(200)->content_is(
   '<select class="c1 test" id="language" name="language">' .
@@ -32,17 +34,17 @@ $t->get_ok('/')->status_is(200)->content_is(
   '<option value="en">en</option>' .
   '</select>' .
   "\n\n" .
-  '<input class="c2 test" id="name" name="name" type="text" value="" />' .
+  '<input class="c2 test" id="name" name="name" type="text" value=""$close>' .
   "\n\n" .
-  '<input id="id" name="id" type="hidden" value="hello" />' .
+  '<input id="id" name="id" type="hidden" value="hello"$close>' .
   "\n\n" .
-  '<input class="c3 test" id="pwd" name="pwd" type="password" value="" />' .
+  '<input class="c3 test" id="pwd" name="pwd" type="password" value=""$close>' .
   "\n\n" .
-  '<input class="c4 test" id="filter" name="filter" type="checkbox" value="age" />' .
+  '<input class="c4 test" id="filter" name="filter" type="checkbox" value="age"$close>' .
   "\n\n\n" .
-  '<input class="c5 test" id="type" name="type" type="radio" value="internal" />' .
+  '<input class="c5 test" id="type" name="type" type="radio" value="internal"$close>' .
   "\n" .
-  '<input class="c5 test" id="type" name="type" type="radio" value="external" />' .
+  '<input class="c5 test" id="type" name="type" type="radio" value="external"$close>' .
   "\n\n\n" .
   '<textarea class="c6 test" id="comment" name="comment"></textarea>'
 );

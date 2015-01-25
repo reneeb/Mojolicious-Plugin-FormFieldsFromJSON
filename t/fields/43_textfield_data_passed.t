@@ -29,10 +29,12 @@ get '/stash' => sub {
   $c->render(text => $textfield);
 };
 
+my $close = Mojolicious->VERSION >= 5.74 ? '' : " /";
+
 my $t = Test::Mojo->new;
-$t->get_ok('/')->status_is(200)->content_is('<input id="name" name="name" type="text" value="default value" />');
-$t->get_ok('/?name=test')->status_is(200)->content_is('<input id="name" name="name" type="text" value="test" />');
-$t->get_ok('/stash')->status_is(200)->content_is('<input id="name" name="name" type="text" value="test" />');
+$t->get_ok('/')->status_is(200)->content_is('<input id="name" name="name" type="text" value="default value"$close>');
+$t->get_ok('/?name=test')->status_is(200)->content_is('<input id="name" name="name" type="text" value="test"$close>');
+$t->get_ok('/stash')->status_is(200)->content_is('<input id="name" name="name" type="text" value="test"$close>');
 
 done_testing();
 

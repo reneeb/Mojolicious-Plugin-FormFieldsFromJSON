@@ -22,6 +22,8 @@ get '/' => sub {
   $c->render(text => $fields);
 };
 
+my $close = Mojolicious->VERSION >= 5.74 ? '' : " /";
+
 my $t = Test::Mojo->new;
 $t->get_ok('/')->status_is(200)->content_is(join '',
   '<select id="language" name="language">',
@@ -29,7 +31,7 @@ $t->get_ok('/')->status_is(200)->content_is(join '',
   '<option value="en">en</option>',
   '</select>',
   "\n\n",
-  '<input id="name" name="name" type="text" value="" />'
+  '<input id="name" name="name" type="text" value=""$close>'
 );
 
 done_testing();

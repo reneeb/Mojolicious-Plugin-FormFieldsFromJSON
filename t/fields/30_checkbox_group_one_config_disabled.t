@@ -22,10 +22,12 @@ get '/' => sub {
   $c->render(text => $textfield);
 };
 
+my $close = Mojolicious->VERSION >= 5.74 ? '' : " /";
+
 my $t = Test::Mojo->new;
 $t->get_ok('/')->status_is(200)->content_is(
-  '<input disabled="disabled" id="type" name="type" type="checkbox" value="internal" />' . "\n" .
-  '<input id="type" name="type" type="checkbox" value="external" />' . "\n"
+  '<input disabled="disabled" id="type" name="type" type="checkbox" value="internal"$close>' . "\n" .
+  '<input id="type" name="type" type="checkbox" value="external"$close>' . "\n"
 );
 
 done_testing();

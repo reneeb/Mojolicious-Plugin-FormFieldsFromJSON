@@ -22,9 +22,11 @@ get '/' => sub {
   $c->render(text => $textfield);
 };
 
+my $close = Mojolicious->VERSION >= 5.74 ? '' : " /";
+
 my $t = Test::Mojo->new;
-$t->get_ok('/')->status_is(200)->content_is('<input id="ProjectID" name="ProjectID" type="hidden" value="test" />');
-$t->get_ok('/?ProjectID=1')->status_is(200)->content_is('<input id="ProjectID" name="ProjectID" type="hidden" value="test" />');
+$t->get_ok('/')->status_is(200)->content_is('<input id="ProjectID" name="ProjectID" type="hidden" value="test"$close>');
+$t->get_ok('/?ProjectID=1')->status_is(200)->content_is('<input id="ProjectID" name="ProjectID" type="hidden" value="test"$close>');
 
 done_testing();
 
