@@ -28,7 +28,7 @@ my $close = Mojolicious->VERSION >= 5.74 ? '' : " /";
 my $t = Test::Mojo->new;
 $t->get_ok('/')->status_is(200)->content_is(
   'Name: <input id="type" name="type" type="checkbox" value="internal"$close>' . "\n" .
-  '<input id="type" name="type" type="checkbox" value="external"$close>' . "\n\n"
+  qq~<input id="type" name="type" type="checkbox" value="external"$close>~ . "\n\n"
 );
 
 done_testing();

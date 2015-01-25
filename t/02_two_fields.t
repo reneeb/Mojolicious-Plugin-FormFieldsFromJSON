@@ -31,7 +31,7 @@ $t->get_ok('/')->status_is(200)->content_is(join '',
   '<option value="en">en</option>',
   '</select>',
   "\n\n",
-  '<input id="name" name="name" type="text" value=""$close>'
+  qq~<input id="name" name="name" type="text" value=""$close>~
 );
 
 done_testing();

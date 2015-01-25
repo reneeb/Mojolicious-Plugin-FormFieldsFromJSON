@@ -34,17 +34,17 @@ $t->get_ok('/')->status_is(200)->content_is(
   '<option value="en">en</option>' .
   '</select>' .
   "\n\n" .
-  '<input class="test" id="name" name="name" type="text" value=""$close>' .
+  qq~<input class="test" id="name" name="name" type="text" value=""$close>~ .
   "\n\n" .
-  '<input id="id" name="id" type="hidden" value="hello"$close>' .
+  qq~<input id="id" name="id" type="hidden" value="hello"$close>~ .
   "\n\n" .
-  '<input class="test" id="pwd" name="pwd" type="password" value=""$close>' .
+  qq~<input class="test" id="pwd" name="pwd" type="password" value=""$close>~ .
   "\n\n" .
-  '<input class="test" id="filter" name="filter" type="checkbox" value="age"$close>' .
+  qq~<input class="test" id="filter" name="filter" type="checkbox" value="age"$close>~ .
   "\n\n\n" .
-  '<input class="test" id="type" name="type" type="radio" value="internal"$close>' .
+  qq~<input class="test" id="type" name="type" type="radio" value="internal"$close>~ .
   "\n" .
-  '<input class="test" id="type" name="type" type="radio" value="external"$close>' .
+  qq~<input class="test" id="type" name="type" type="radio" value="external"$close>~ .
   "\n\n\n" .
   '<textarea class="test" id="comment" name="comment"></textarea>'
 );

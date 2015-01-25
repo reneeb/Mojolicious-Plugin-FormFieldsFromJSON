@@ -25,7 +25,7 @@ get '/' => sub {
 my $close = Mojolicious->VERSION >= 5.74 ? '' : " /";
 
 my $t = Test::Mojo->new;
-$t->get_ok('/')->status_is(200)->content_is('<input class="testclass" id="name" name="name" type="text" value=""$close>');
+$t->get_ok('/')->status_is(200)->content_is(qq~<input class="testclass" id="name" name="name" type="text" value=""$close>~);
 
 done_testing();
 
