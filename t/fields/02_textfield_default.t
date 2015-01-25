@@ -29,7 +29,7 @@ get '/stash' => sub {
   $c->render(text => $textfield);
 };
 
-my $close = Mojolicious->VERSION >= 5.74 ? '' : " /";
+my $close = Mojolicious->VERSION >= 5.73 ? '' : " /";
 
 my $t = Test::Mojo->new;
 $t->get_ok('/')->status_is(200)->content_is(qq~<input id="name" name="name" type="text" value="default value"$close>~);

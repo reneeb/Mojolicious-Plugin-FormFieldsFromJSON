@@ -29,7 +29,7 @@ get '/' => sub {
   $c->render(text => $textfield);
 };
 
-my $close = Mojolicious->VERSION >= 5.74 ? '' : " /";
+my $close = Mojolicious->VERSION >= 5.73 ? '' : " /";
 
 my $t = Test::Mojo->new;
 $t->get_ok('/')
