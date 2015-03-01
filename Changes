@@ -1,6 +1,11 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
+0.27 2015-03-01
+
+  [IMPROVEMENT]
+  * fields() can now return a list of fields where each element is a hashref with name and label of the field.
+
 0.26 2015-01-25
 
   [TESTS]
