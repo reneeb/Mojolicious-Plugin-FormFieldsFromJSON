@@ -1280,7 +1280,7 @@ You get
 
 
 
-=head3 Two radiobuttons configured seperately
+=head3 Two radiobuttons configured separately
 
 With the configuration
 
@@ -1316,7 +1316,7 @@ And with
 
 You get
 
-=head3 Two radiobuttons configured seperately - with template
+=head3 Two radiobuttons configured separately - with template
 
 Define template:
 
@@ -1490,7 +1490,7 @@ You get
 
 
 
-=head3 Two checkboxes configured seperately
+=head3 Two checkboxes configured separately
 
 With the configuration
 
@@ -1526,7 +1526,7 @@ And with
 
 You get
 
-=head3 Two checkboxes configured seperately - with template
+=head3 Two checkboxes configured separately - with template
 
 Define template:
 
