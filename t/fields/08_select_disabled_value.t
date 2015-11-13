@@ -12,6 +12,8 @@ plugin 'FormFieldsFromJSON' => {
   dir => File::Spec->catdir( dirname( __FILE__ ) || '.', 'conf' ),
 };
 
+my $selected = Mojolicious->VERSION < 6.16 ? '="selected"' : '';
+
 my $config_name = basename __FILE__;
 $config_name    =~ s{\A \d+_ }{}xms;
 $config_name    =~ s{\.t \z }{}xms;
@@ -46,7 +48,7 @@ $t->get_ok('/')->status_is(200)->content_is(join '',
 $t->get_ok('/?language=de')->status_is(200)->content_is(join '',
   '<select id="language" name="language">',
   '<option value="cn">cn</option>',
-  '<option selected="selected" value="de">de</option>',
+  qq~<option selected$selected value="de">de</option>~,
   '<option disabled="disabled" value="en">en</option>',
   '</select>',
 );

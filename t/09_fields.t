@@ -7,6 +7,7 @@ use Mojolicious::Lite;
 use Test::Mojo;
 use File::Basename;
 use File::Spec;
+use Data::Dumper;
 
 plugin 'FormFieldsFromJSON' => {
   dir => File::Spec->catdir( dirname( __FILE__ ) || '.', 'formsconf' ),

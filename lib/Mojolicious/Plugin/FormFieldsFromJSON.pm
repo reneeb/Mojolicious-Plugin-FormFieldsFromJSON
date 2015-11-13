@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious::Plugin';
 
 # ABSTRACT: create form fields based on a definition in a JSON file
 
-our $VERSION = '0.30';
+our $VERSION = '0.31';
 
 use Carp;
 use File::Basename;
@@ -15,6 +15,10 @@ use Mojo::Asset::File;
 use Mojo::Collection;
 use Mojo::ByteStream;
 use Mojo::JSON qw(decode_json);
+
+use Mojolicious ();
+my $selected_value = Mojolicious->VERSION < 6.16 ? 'selected' : undef;
+my $checked_value  = Mojolicious->VERSION < 6.16 ? 'checked'  : undef;
 
 sub register {
     my ($self, $app, $config) = @_;
@@ -327,7 +331,7 @@ sub _select {
             +{ selected => $stash_values },
             'selected',
         );
-        $c->param( $name, '' );
+
         $reset = 1;
     }
 
@@ -349,6 +353,13 @@ sub _select {
     if ( $field->{multiple} ) {
         $attrs{multiple} = 'multiple';
         $attrs{size}     = $field->{size} || 5;
+    }
+
+    my @selected = keys %{ $select_params{selected} };
+    if ( @selected ) {
+        my $single = scalar @selected;
+        my $param  = $single == 1 ? $selected[0] : \@selected;
+        $c->param( $name, $param );
     }
 
     my $select_field = $c->select_field( $name, [ @values ], id => $id, %attrs );
@@ -417,8 +428,9 @@ sub _transform_hash_values {
         else {
             my %opts;
 
-            $opts{disabled} = 'disabled' if $params{disabled}->{$key};
-            $opts{selected} = 'selected' if $params{selected}->{$key};
+            $opts{disabled} = 'disabled'      if $params{disabled}->{$key};
+            $opts{selected} = $selected_value if $params{selected}->{$key};
+            #$opts{selected} = undef if $params{selected}->{$key};
 
             $values[$counter] = [ $data->{$key} => $key, %opts ];
             $mapping{$key}    = $counter;
@@ -455,8 +467,9 @@ sub _transform_array_values {
 
         my %opts;
 
-        $opts{disabled} = 'disabled' if $params{disabled}->{$value};
-        $opts{selected} = 'selected' if $params{selected}->{$value};
+        $opts{disabled} = 'disabled'      if $params{disabled}->{$value};
+        $opts{selected} = $selected_value if $params{selected}->{$value};
+        #$opts{selected} = undef if $params{selected}->{$value};
 
         push @values, [ $value => $value, %opts ];
     }
@@ -492,7 +505,6 @@ sub _radio {
             +{ selected => $stash_values },
             'selected',
         );
-        $c->param( $name, '' );
         $reset = 1;
     }
 
@@ -501,6 +513,13 @@ sub _radio {
         if ( keys %{ $hashref } ) {
             $select_params{$key} = $hashref;
         }
+    }
+
+    my @selected = keys %{ $select_params{selected} };
+    if ( @selected ) {
+        my $single = scalar @selected;
+        my $param  = $single == 1 ? $selected[0] : \@selected;
+        $c->param( $name, $param );
     }
 
     my $radiobuttons = '';
@@ -512,7 +531,7 @@ sub _radio {
         }
 
         if ( $select_params{selected}->{$radio_value} ) {
-            $value_attributes{checked} = 'checked';
+            $value_attributes{checked} = $checked_value;
         }
 
         my $local_label = '';
@@ -583,6 +602,13 @@ sub _checkbox {
         }
     }
 
+    my @selected = keys %{ $select_params{selected} };
+    if ( @selected ) {
+        my $single = scalar @selected;
+        my $param  = $single == 1 ? $selected[0] : \@selected;
+        $c->param( $name, $param );
+    }
+
     my $checkboxes = '';
     for my $checkbox_value ( @values ) {
         my %value_attributes;
@@ -592,7 +618,7 @@ sub _checkbox {
         }
 
         if ( $select_params{selected}->{$checkbox_value} ) {
-            $value_attributes{checked} = 'checked';
+            $value_attributes{checked} = $checked_value;
         }
 
         my $local_label = '';

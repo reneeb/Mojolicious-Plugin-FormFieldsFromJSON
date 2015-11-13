@@ -12,6 +12,8 @@ plugin 'FormFieldsFromJSON' => {
   dir => File::Spec->catdir( dirname( __FILE__ ) || '.', 'conf' ),
 };
 
+my $selected = Mojolicious->VERSION < 6.16 ? '="selected"' : '';
+
 my $config_name = basename __FILE__;
 $config_name    =~ s{\A \d+_ }{}xms;
 $config_name    =~ s{\.t \z }{}xms;
@@ -33,27 +35,27 @@ my $t = Test::Mojo->new;
 $t->get_ok('/')->status_is(200)->content_is(join '',
   '<select id="languages" multiple="multiple" name="languages" size="3">',
   '<option value="cn">cn</option>',
-  '<option selected="selected" value="de">de</option>',
-  '<option selected="selected" value="en">en</option>',
+  qq~<option selected$selected value="de">de</option>~,
+  qq~<option selected$selected value="en">en</option>~,
   '<option value="jp">jp</option>',
   '</select>',
 );
 
 $t->get_ok("/?languages=cn&languages=jp")->status_is(200)->content_is(join '',
   '<select id="languages" multiple="multiple" name="languages" size="3">',
-  '<option selected="selected" value="cn">cn</option>',
+  qq~<option selected$selected value="cn">cn</option>~,
   '<option value="de">de</option>',
   '<option value="en">en</option>',
-  '<option selected="selected" value="jp">jp</option>',
+  qq~<option selected$selected value="jp">jp</option>~,
   '</select>',
 );
 
 $t->get_ok('/stash')->status_is(200)->content_is(join '',
   '<select id="languages" multiple="multiple" name="languages" size="3">',
-  '<option selected="selected" value="cn">cn</option>',
+  qq~<option selected$selected value="cn">cn</option>~,
   '<option value="de">de</option>',
   '<option value="en">en</option>',
-  '<option selected="selected" value="jp">jp</option>',
+  qq~<option selected$selected value="jp">jp</option>~,
   '</select>',
 );
 

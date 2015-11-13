@@ -12,6 +12,8 @@ plugin 'FormFieldsFromJSON' => {
   dir => File::Spec->catdir( dirname( __FILE__ ) || '.', 'conf' ),
 };
 
+my $checked = Mojolicious->VERSION < 6.16 ? '="checked"' : '';
+
 my $config_name = basename __FILE__;
 $config_name    =~ s{\A \d+_ }{}xms;
 $config_name    =~ s{\.t \z }{}xms;
@@ -47,28 +49,28 @@ my $close = Mojolicious->VERSION >= 5.73 ? '' : " /";
 
 my $t = Test::Mojo->new;
 $t->get_ok('/')->status_is(200)->content_is(
-  qq~<input checked="checked" id="type" name="type" type="checkbox" value="internal"$close>~ . "\n" .
+  qq~<input checked$checked id="type" name="type" type="checkbox" value="internal"$close>~ . "\n" .
   qq~<input id="type" name="type" type="checkbox" value="external"$close>~ . "\n"
 );
 
 $t->get_ok('/?type=internal')->status_is(200)->content_is(
-  qq~<input checked="checked" id="type" name="type" type="checkbox" value="internal"$close>~ . "\n" .
+  qq~<input checked$checked id="type" name="type" type="checkbox" value="internal"$close>~ . "\n" .
   qq~<input id="type" name="type" type="checkbox" value="external"$close>~ . "\n"
 );
 
 $t->get_ok('/test')->status_is(200)->content_is(
-  qq~<input checked="checked" id="type" name="type" type="checkbox" value="internal"$close>~ . "\n" .
+  qq~<input checked$checked id="type" name="type" type="checkbox" value="internal"$close>~ . "\n" .
   qq~<input id="type" name="type" type="checkbox" value="external"$close>~ . "\n"
 );
 
 $t->get_ok('/set')->status_is(200)->content_is(
-  qq~<input checked="checked" id="type" name="type" type="checkbox" value="internal"$close>~ . "\n" .
+  qq~<input checked$checked id="type" name="type" type="checkbox" value="internal"$close>~ . "\n" .
   qq~<input id="type" name="type" type="checkbox" value="external"$close>~ . "\n"
 );
 
 $t->get_ok('/reset?type=external')->status_is(200)->content_is(
   'external' .
-  qq~<input checked="checked" id="type" name="type" type="checkbox" value="internal"$close>~ . "\n" .
+  qq~<input checked$checked id="type" name="type" type="checkbox" value="internal"$close>~ . "\n" .
   qq~<input id="type" name="type" type="checkbox" value="external"$close>~ . "\n"
 );
 
