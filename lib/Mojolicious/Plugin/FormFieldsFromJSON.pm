@@ -17,6 +17,9 @@ use Mojo::ByteStream;
 use Mojo::JSON qw(decode_json);
 
 use Mojolicious ();
+
+has dir => sub {["."]} ;
+
 my $selected_value = Mojolicious->VERSION < 6.16 ? 'selected' : undef;
 my $checked_value  = Mojolicious->VERSION < 6.16 ? 'checked'  : undef;
 
@@ -26,11 +29,10 @@ sub register {
     $config //= {};
   
     my %configs;
-    my $dir = ['.'];
 		if(ref $config->{dir} eq "ARRAY"){
-			$dir = $config->{dir}; 
+			@{$self->dir} = @{$config->{dir}}; 
 		}else{
-			$dir = [$config->{dir}];
+			@{$self->dir} = ($config->{dir});
 		}
   
     my %valid_types = (
@@ -51,7 +53,7 @@ sub register {
                 return sort keys %configfiles;
             }
 
-						for my $dir (@$dir){
+						for my $dir (@$self->dir){
 							my $dir = IO::Dir->new( $dir );
 
 							FILE:
@@ -66,6 +68,9 @@ sub register {
         }
     );
 
+    $app->helper(
+        "form_fields_from_json_dir" => sub {return $self->dir}
+    );
     $app->helper(
         fields => sub {
             my ($c, $file, $params) = @_;
@@ -203,9 +208,9 @@ sub register {
 								# search until first match
 								my $i=0;
 								do {
-									my $_path= File::Spec->catfile( $dir->[$i], $file . '.json' );
+									my $_path= File::Spec->catfile( $self->dir->[$i], $file . '.json' );
 									$path = $_path if -r $_path;
-								}while(not defined $path and ++$i <= $#{$dir});							
+								}while(not defined $path and ++$i <= $#{$self->dir});							
 							
                 return '' if not defined $path;
  
