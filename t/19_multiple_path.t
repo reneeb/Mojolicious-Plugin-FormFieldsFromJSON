@@ -36,11 +36,11 @@ my $close = Mojolicious->VERSION >= 5.73 ? '' : " /";
 my $t = Test::Mojo->new;
 $t->get_ok('/conf_a')
   ->status_is(200)
-  ->content_is(qq~<label for="name">Name:</label><div><input id="name" name="name" type="text" value=""$close></div>\n~);
+  ->content_is(qq~<label for="name_a">Name:</label><div><input id="name_a" name="name_a" type="text" value=""$close></div>\n~);
 
 $t->get_ok('/conf_b')
   ->status_is(200)
-  ->content_is(qq~<label for="name">Name:</label><div><input id="name" name="name" type="text" value=""$close></div>\n~);
+  ->content_is(qq~<label for="name_b">Name:</label><div><input id="name_b" name="name_b" type="text" value=""$close></div>\n~);
 
 done_testing();
 
