@@ -53,7 +53,7 @@ sub register {
                 return sort keys %configfiles;
             }
 
-						for my $dir (@$self->dir){
+						for my $dir (@{$self->dir}){
 							my $dir = IO::Dir->new( $dir );
 
 							FILE:
