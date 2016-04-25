@@ -212,7 +212,11 @@ sub register {
 									$path = $_path if -r $_path;
 								}while(not defined $path and ++$i <= $#{$self->dir});							
 							
-                return '' if not defined $path;
+								if( not defined $path){
+									$app->log->error( "FORMFIELDS $file: not found in directories" );
+									$app->log->error( "  $_") foreach (@{$self->dir});
+									return '';
+								}
  
                 eval {
                     my $content = Mojo::Asset::File->new( path => $path )->slurp;
