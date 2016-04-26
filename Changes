@@ -1,6 +1,18 @@
 Release history for Mojolicious::Plugin::FormFieldsFromJSON
 ===========================================================
 
+0.32 2016-04-26
+
+  [IMPROVEMENT]
+  * now you can pass an arrayreference for the directories where the JSON files are stored
+    (thanks to csroli #4)
+
+0.31 2015-11-13
+
+  [MISC]
+  * fix test failures with Mojolicious >= 6.16
+  * fix typos (thanks to wollmers #1)
+
 0.30 2015-04-08
 
   [IMPROVEMENT]
