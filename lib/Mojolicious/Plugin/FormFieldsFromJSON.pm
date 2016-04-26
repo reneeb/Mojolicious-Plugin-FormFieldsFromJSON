@@ -17,6 +17,9 @@ use Mojo::ByteStream;
 use Mojo::JSON qw(decode_json);
 
 use Mojolicious ();
+
+has dir => sub {["."]} ;
+
 my $selected_value = Mojolicious->VERSION < 6.16 ? 'selected' : undef;
 my $checked_value  = Mojolicious->VERSION < 6.16 ? 'checked'  : undef;
 
@@ -26,7 +29,11 @@ sub register {
     $config //= {};
   
     my %configs;
-    my $dir = $config->{dir} || '.';
+		if(ref $config->{dir} eq "ARRAY"){
+			@{$self->dir} = @{$config->{dir}}; 
+		}else{
+			@{$self->dir} = ($config->{dir});
+		}
   
     my %valid_types = (
         %{ $config->{types} || {} },
@@ -46,20 +53,24 @@ sub register {
                 return sort keys %configfiles;
             }
 
-            my $dir = IO::Dir->new( $dir );
+						for my $dir (@{$self->dir}){
+							my $dir = IO::Dir->new( $dir );
 
-            FILE:
-            while ( my $file = $dir->read ) {
-                next FILE if $file !~ m{\.json\z};
-                my $filename = basename $file;
-                $filename    =~ s{\.json\z}{};
-                $configfiles{$filename} = 1;
-            }
-
+							FILE:
+							while ( my $file = $dir->read ) {
+									next FILE if $file !~ m{\.json\z};
+									my $filename = basename $file;
+									$filename    =~ s{\.json\z}{};
+									$configfiles{$filename} = 1;
+							}
+						}
             return sort keys %configfiles;
         }
     );
 
+    $app->helper(
+        "form_fields_from_json_dir" => sub {return $self->dir}
+    );
     $app->helper(
         fields => sub {
             my ($c, $file, $params) = @_;
@@ -192,9 +203,21 @@ sub register {
             return '' if !$file;
   
             if ( !$configs{$file} && !ref $file ) {
-                my $path = File::Spec->catfile( $dir, $file . '.json' );
-                return '' if !-r $path;
-  
+                my $path;
+
+								# search until first match
+								my $i=0;
+								do {
+									my $_path= File::Spec->catfile( $self->dir->[$i], $file . '.json' );
+									$path = $_path if -r $_path;
+								}while(not defined $path and ++$i <= $#{$self->dir});							
+							
+								if( not defined $path){
+									$app->log->error( "FORMFIELDS $file: not found in directories" );
+									$app->log->error( "  $_") foreach (@{$self->dir});
+									return '';
+								}
+ 
                 eval {
                     my $content = Mojo::Asset::File->new( path => $path )->slurp;
                     $configs{$file} = decode_json $content;
