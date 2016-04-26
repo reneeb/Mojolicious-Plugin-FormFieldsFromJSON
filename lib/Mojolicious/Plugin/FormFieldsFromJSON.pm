@@ -736,6 +736,17 @@ The directory where the json files for form field configuration are located
     dir => '/home/mojo/fields',
   });
 
+You can also pass an arrayreference with directory names. This will help when you
+store the JSON files where your templates are...
+
+  $self->plugin( 'FormFieldsFromJSON' => {
+    dir => [
+      '/home/mojo/templates/admin/json',
+      '/home/mojo/templates/author/json',
+      '/home/mojo/templates/guest/json',
+    ]
+  });
+
 =item * template
 
 With template you can define a template for the form fields.
