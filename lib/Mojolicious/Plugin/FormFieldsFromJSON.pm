@@ -394,7 +394,6 @@ sub _select {
     if (scalar(@{ $stash_values || [] }) == 0 && defined( $c->stash( $name ))){
         $stash_values = [ $c->stash( $name )];
     }
-    # $c->deep_debug("rendering select: ", { field => $field, params => \%params, stash_values => $stash_values, test => $test });
     my $reset;
     if ( @{ $stash_values || [] } ) {
         $select_params{selected} = $self->_get_highlighted_values(
