@@ -392,7 +392,8 @@ sub _select {
 
     my $stash_values = $c->every_param( $name );
     if (scalar(@{ $stash_values || [] }) == 0 && defined( $c->stash( $name ))){
-        $stash_values = [ $c->stash( $name )];
+        my $local_stash = $c->stash( $name );
+        $stash_values = ref $local_stash ? $local_stash : [ $local_stash ];
     }
     my $reset;
     if ( @{ $stash_values || [] } ) {
@@ -568,6 +569,10 @@ sub _radio {
     );
 
     my $stash_values = $c->every_param( $name );
+    if (scalar(@{ $stash_values || [] }) == 0 && defined( $c->stash( $name ))){
+        my $local_stash = $c->stash( $name );
+        $stash_values = ref $local_stash ? $local_stash : [ $local_stash ];
+    }
     my $reset;
     if ( @{ $stash_values || [] } ) {
         $select_params{selected} = $self->_get_highlighted_values(
@@ -654,6 +659,10 @@ sub _checkbox {
     );
 
     my $stash_values = $c->every_param( $name );
+    if (scalar(@{ $stash_values || [] }) == 0 && defined( $c->stash( $name ))){
+        my $local_stash = $c->stash( $name );
+        $stash_values = ref $local_stash ? $local_stash : [ $local_stash ];
+    }
     my $reset;
     if ( @{ $stash_values || [] } ) {
         $select_params{selected} = $self->_get_highlighted_values(

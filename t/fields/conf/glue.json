@@ -12,7 +12,6 @@
     "name" : "accept_timerecording",
     "label": "Timerecording",
     "type" : "switch",
-    "selected" : 1,
     "data" : "1",
     "validation" : {
         "required" : { "msg" : "A value is required" }
