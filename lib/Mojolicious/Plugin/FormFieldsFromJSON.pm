@@ -947,7 +947,7 @@ You get
 =item * translate_labels
 
 If I<translate_labels> is true, the labels for the templates are translated. You have to provide a
-I<translation_method|Mojolicious::Plugin::FormFieldsFromJSON/Translation_method>, too.
+L<translation_method|Mojolicious::Plugin::FormFieldsFromJSON/Translation_method>, too.
 
   plugin 'FormFieldsFromJSON' => {
     template           => '<%= $label %>: <%= $field %>',
@@ -955,12 +955,12 @@ I<translation_method|Mojolicious::Plugin::FormFieldsFromJSON/Translation_method>
     translation_method => \&loc,
   };
 
-For more details see I<Translation|Mojolicious::Plugin::FormFieldsFromJSON/Translation>.
+For more details see L<Translation|Mojolicious::Plugin::FormFieldsFromJSON/Translation>.
 
 =item * translation_method
 
 If I<translate_labels> is true, the labels for the templates are translated. You have to provide a
-I<translation_method|Mojolicious::Plugin::FormFieldsFromJSON/Translation_method>, too.
+L<translation_method|Mojolicious::Plugin::FormFieldsFromJSON/Translation_method>, too.
 
   plugin 'FormFieldsFromJSON' => {
     template           => '<%= $label %>: <%= $field %>',
