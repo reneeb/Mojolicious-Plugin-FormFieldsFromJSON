@@ -57,7 +57,8 @@ sub register {
     $app->helper(
         forms => sub {
             if (%configfiles) {
-                return sort keys %configfiles;
+                my @sorted_configfiles = sort keys %configfiles;
+                return @sorted_configfiles;
             }
 
             for my $dir ( @{ $self->dir } ) {
@@ -74,7 +75,8 @@ sub register {
                 }
             }
 
-            return sort keys %configfiles;
+            my @sorted_configfiles = sort keys %configfiles;
+            return @sorted_configfiles;
         }
     );
 
