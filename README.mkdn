@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/reneeb/Mojolicious-Plugin-FormFieldsFromJSON.svg?branch=master)](https://travis-ci.org/reneeb/Mojolicious-Plugin-FormFieldsFromJSON)
-[![Kwalitee status](http://cpants.cpanauthors.org/dist/Mojolicious-Plugin-FormFieldsFromJSON.png)](http://cpants.charsbar.org/dist/overview/Mojolicious-Plugin-FormFieldsFromJSON)
+[![Kwalitee status](http://cpants.cpanauthors.org/dist/Mojolicious-Plugin-FormFieldsFromJSON.png)](https://cpants.cpanauthors.org/dist/Mojolicious-Plugin-FormFieldsFromJSON)
 [![GitHub issues](https://img.shields.io/github/issues/reneeb/Mojolicious-Plugin-FormFieldsFromJSON.svg)](https://github.com/reneeb/Mojolicious-Plugin-FormFieldsFromJSON/issues)
 
 # NAME
@@ -8,7 +8,7 @@ Mojolicious::Plugin::FormFieldsFromJSON - create form fields based on a definiti
 
 # VERSION
 
-version 1.01
+version 1.02
 
 # SYNOPSIS
 
@@ -20,7 +20,7 @@ version 1.01
 
 # DESCRIPTION
 
-[Mojolicious::Plugin::FormFieldsFromJSON](https://metacpan.org/pod/Mojolicious::Plugin::FormFieldsFromJSON) is a [Mojolicious](https://metacpan.org/pod/Mojolicious) plugin.
+[Mojolicious::Plugin::FormFieldsFromJSON](https://metacpan.org/pod/Mojolicious%3A%3APlugin%3A%3AFormFieldsFromJSON) is a [Mojolicious](https://metacpan.org/pod/Mojolicious) plugin.
 
 # NAME
 
@@ -61,7 +61,7 @@ You can configure some settings for the plugin:
           template => '<label for="<%= $id %>"><%= $label %>:</label><div><%= $field %></div>',
         });
 
-    See [Templates](https://metacpan.org/pod/Mojolicious::Plugin::FormFieldsFromJSON#Templates).
+    See [Templates](https://metacpan.org/pod/Mojolicious%3A%3APlugin%3A%3AFormFieldsFromJSON#Templates).
 
 - templates
 
@@ -73,7 +73,7 @@ You can configure some settings for the plugin:
           },
         };
 
-    See [Templates](https://metacpan.org/pod/Mojolicious::Plugin::FormFieldsFromJSON#Templates).
+    See [Templates](https://metacpan.org/pod/Mojolicious%3A%3APlugin%3A%3AFormFieldsFromJSON#Templates).
 
 - global\_attributes
 
@@ -147,7 +147,7 @@ You can configure some settings for the plugin:
 - translate\_labels
 
     If _translate\_labels_ is true, the labels for the templates are translated. You have to provide a
-    _translation\_method|Mojolicious::Plugin::FormFieldsFromJSON/Translation\_method_, too.
+    [translation\_method](https://metacpan.org/pod/Mojolicious%3A%3APlugin%3A%3AFormFieldsFromJSON#Translation_method), too.
 
         plugin 'FormFieldsFromJSON' => {
           template           => '<%= $label %>: <%= $field %>',
@@ -155,12 +155,12 @@ You can configure some settings for the plugin:
           translation_method => \&loc,
         };
 
-    For more details see _Translation|Mojolicious::Plugin::FormFieldsFromJSON/Translation_.
+    For more details see [Translation](https://metacpan.org/pod/Mojolicious%3A%3APlugin%3A%3AFormFieldsFromJSON#Translation).
 
 - translation\_method
 
     If _translate\_labels_ is true, the labels for the templates are translated. You have to provide a
-    _translation\_method|Mojolicious::Plugin::FormFieldsFromJSON/Translation\_method_, too.
+    [translation\_method](https://metacpan.org/pod/Mojolicious%3A%3APlugin%3A%3AFormFieldsFromJSON#Translation_method), too.
 
         plugin 'FormFieldsFromJSON' => {
           template           => '<%= $label %>: <%= $field %>',
@@ -239,10 +239,10 @@ This way, you can build your forms dynamically (e.g. based on database entries).
 
 ## validate\_form\_fields
 
-This helper validates the input. It uses the [Mojolicious::Validator::Validation](https://metacpan.org/pod/Mojolicious::Validator::Validation) and it
+This helper validates the input. It uses the [Mojolicious::Validator::Validation](https://metacpan.org/pod/Mojolicious%3A%3AValidator%3A%3AValidation) and it
 validates all fields defined in the configuration file.
 
-For more details see [Validation](https://metacpan.org/pod/Mojolicious::Plugin::FormFieldsFromJSON#Validation).
+For more details see [Validation](https://metacpan.org/pod/Mojolicious%3A%3APlugin%3A%3AFormFieldsFromJSON#Validation).
 
 ## forms
 
@@ -1023,7 +1023,7 @@ You'll get
 
 ## textarea
 
-This type is very similar to [text](https://metacpan.org/pod/Mojolicious::Plugin::FormFieldsFromJSON#text).
+This type is very similar to [text](https://metacpan.org/pod/Mojolicious%3A%3APlugin%3A%3AFormFieldsFromJSON#text).
 
 ### A simple textarea
 
@@ -1063,7 +1063,7 @@ And the generated textarea looks like
 
 ## password
 
-This type is very similar to [text](https://metacpan.org/pod/Mojolicious::Plugin::FormFieldsFromJSON#text).
+This type is very similar to [text](https://metacpan.org/pod/Mojolicious%3A%3APlugin%3A%3AFormFieldsFromJSON#text).
 You can use the very same settings as for text fields, so we show only a simple
 example here:
 
@@ -1201,14 +1201,14 @@ You get three template variables for free:
 You can define some validation rules in your config file. And when you call `validate_form_fields`, the
 fields defined in the configuration file are validated.
 
-[Mojolicious::Validator::Validation](https://metacpan.org/pod/Mojolicious::Validator::Validation) is shipped with some basic validation checks:
+[Mojolicious::Validator::Validation](https://metacpan.org/pod/Mojolicious%3A%3AValidator%3A%3AValidation) is shipped with some basic validation checks:
 
 - in
 - size
 - like
 - equal\_to
 
-There is [Mojolicious::Plugin::AdditionalValidationChecks](https://metacpan.org/pod/Mojolicious::Plugin::AdditionalValidationChecks) with some more basic checks. And you can also
+There is [Mojolicious::Plugin::AdditionalValidationChecks](https://metacpan.org/pod/Mojolicious%3A%3APlugin%3A%3AAdditionalValidationChecks) with some more basic checks. And you can also
 define your own checks.
 
 The _validation_ field is a hashref where the name of the check is the key
@@ -1347,10 +1347,10 @@ dates, ranges, order of characters etc. But that can't be covered within this
 single module. There are more Mojolicious plugins that provide more features
 about i18n:
 
-- [Mojolicious::Plugin::I18N](https://metacpan.org/pod/Mojolicious::Plugin::I18N)
-- [Mojolicious::Plugin::TagHelpersI18N](https://metacpan.org/pod/Mojolicious::Plugin::TagHelpersI18N)
-- [Mojolicious::Plugin::I18NUtils](https://metacpan.org/pod/Mojolicious::Plugin::I18NUtils)
-- [Mojolicious::Plugin::CountryDropDown](https://metacpan.org/pod/Mojolicious::Plugin::CountryDropDown)
+- [Mojolicious::Plugin::I18N](https://metacpan.org/pod/Mojolicious%3A%3APlugin%3A%3AI18N)
+- [Mojolicious::Plugin::TagHelpersI18N](https://metacpan.org/pod/Mojolicious%3A%3APlugin%3A%3ATagHelpersI18N)
+- [Mojolicious::Plugin::I18NUtils](https://metacpan.org/pod/Mojolicious%3A%3APlugin%3A%3AI18NUtils)
+- [Mojolicious::Plugin::CountryDropDown](https://metacpan.org/pod/Mojolicious%3A%3APlugin%3A%3ACountryDropDown)
 
 You can combine these plugins with this plugin. An example is available at
 [the code repository](http://github.com/reneeb/Mojolicious-Plugin-FormFieldsFromJSON/tree/master/example).
@@ -1405,11 +1405,11 @@ The subroutine gets these parameters:
 
     Whatever is passed as parameters to the `form_fields` method.
 
-As an example, you can see [Mojolicious::Plugin::FormFieldsFromJSON::Date](https://metacpan.org/pod/Mojolicious::Plugin::FormFieldsFromJSON::Date).
+As an example, you can see [Mojolicious::Plugin::FormFieldsFromJSON::Date](https://metacpan.org/pod/Mojolicious%3A%3APlugin%3A%3AFormFieldsFromJSON%3A%3ADate).
 
 # SEE ALSO
 
-[Mojolicious](https://metacpan.org/pod/Mojolicious), [Mojolicious::Guides](https://metacpan.org/pod/Mojolicious::Guides), [http://mojolicio.us](http://mojolicio.us).
+[Mojolicious](https://metacpan.org/pod/Mojolicious), [Mojolicious::Guides](https://metacpan.org/pod/Mojolicious%3A%3AGuides), [http://mojolicio.us](http://mojolicio.us).
 
 
 
