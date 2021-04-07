@@ -14,7 +14,7 @@ use List::Util qw(first);
 use Mojo::Asset::File;
 use Mojo::Collection;
 use Mojo::ByteStream;
-use Mojo::File;
+use Mojo::File qw(path);
 use Mojo::JSON qw(decode_json);
 
 use Mojolicious ();
@@ -30,7 +30,7 @@ sub register {
     $config //= {};
 
     if ( $config->{template_file} ) {
-        $config->{template} = Mojo::File->new( $app->home, 'templates', $config->{template_file} )->slurp;
+        $config->{template} = path( $app->home, 'templates', $config->{template_file} )->slurp;
         $config->{template} //= $app->renderer->get_data_template( $config->{template_file} );
     }
 
@@ -64,7 +64,7 @@ sub register {
             for my $dir ( @{ $self->dir } ) {
                 my $dir = IO::Dir->new($dir);
 
-              FILE:
+                FILE:
                 while ( my $file = $dir->read ) {
                     next FILE if $file !~ m{\.json\z};
 
@@ -130,7 +130,7 @@ sub register {
 
             my %errors;
 
-          FIELD:
+            FIELD:
             for my $field ( @{$config} ) {
                 if ( 'HASH' ne ref $field ) {
                     $app->log->error('Field definition must be a HASH - skipping field');
@@ -161,7 +161,7 @@ sub register {
                     $validation->optional($name);
                 }
 
-              RULE:
+                RULE:
                 for my $rule ( sort keys %{ $field->{validation} } ) {
                     last RULE if !defined $params{$name};
 
@@ -220,7 +220,7 @@ sub register {
 
             my %fields_to_show = map { $_ => 1 } @{ $params{fields} || [] };
 
-          FIELD:
+            FIELD:
             for my $field ( @{$field_config} ) {
                 next FIELD if %fields_to_show && !$fields_to_show{ $field->{name} };
 
@@ -346,8 +346,9 @@ sub _build_form_field {
 
     $form_field = Mojo::ByteStream->new($form_field);
 
-    my $template = $field->{template} // $plugin_config->{templates}->{$orig_type}
-      // $plugin_config->{template};
+    my $template = $field->{template}
+        // $plugin_config->{templates}->{$orig_type}
+        // $plugin_config->{template};
 
     if ( $template && $type ne 'hidden' ) {
         my $label = $field->{label} // '';
@@ -540,7 +541,7 @@ sub _transform_hash_values {
     my $counter = 0;
     my %mapping;
 
-  KEY:
+    KEY:
     for my $key ( keys %{$data} ) {
         if ( ref $data->{$key} ) {
             my @group_values = $self->_get_select_values( $c, +{ data => $data->{$key} }, %params );
@@ -599,10 +600,9 @@ sub _transform_array_values {
         push @values, [ $value => $value, %opts ];
     }
 
-    @values =
-      $numeric
-      ? sort { $a->[0] <=> $b->[0] } @values
-      : sort { $a->[0] cmp $b->[0] } @values;
+    @values = $numeric
+        ? sort { $a->[0] <=> $b->[0] } @values
+        : sort { $a->[0] cmp $b->[0] } @values;
 
     return @values;
 }
@@ -619,20 +619,23 @@ sub _radio {
 
     my $field_params = $params{$name} || {},
 
-      my %select_params = (
+    my %select_params = (
         disabled => $self->_get_highlighted_values( $field, 'disabled' ),
         selected => $self->_get_highlighted_values( $field, 'selected' ),
-      );
+    );
 
     my $stash_values = $c->every_param($name);
     if ( scalar( @{ $stash_values || [] } ) == 0 && defined( $c->stash($name) ) ) {
         my $local_stash = $c->stash($name);
         $stash_values = ref $local_stash ? $local_stash : [$local_stash];
     }
+
     my $reset;
     if ( @{ $stash_values || [] } ) {
-        $select_params{selected} =
-          $self->_get_highlighted_values( +{ selected => $stash_values }, 'selected', );
+        $select_params{selected} = $self->_get_highlighted_values(
+            +{ selected => $stash_values },
+            'selected',
+        );
         $reset = 1;
     }
 
@@ -707,16 +710,17 @@ sub _checkbox {
 
     my $field_params = $params{$name} || {},
 
-      my %select_params = (
+    my %select_params = (
         disabled => $self->_get_highlighted_values( $field, 'disabled' ),
         selected => $self->_get_highlighted_values( $field, 'selected' ),
-      );
+    );
 
     my $stash_values = $c->every_param($name);
     if ( scalar( @{ $stash_values || [] } ) == 0 && defined( $c->stash($name) ) ) {
         my $local_stash = $c->stash($name);
         $stash_values = ref $local_stash ? $local_stash : [$local_stash];
     }
+
     my $reset;
     if ( @{ $stash_values || [] } ) {
         $select_params{selected} =
