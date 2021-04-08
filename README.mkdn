@@ -8,7 +8,7 @@ Mojolicious::Plugin::FormFieldsFromJSON - create form fields based on a definiti
 
 # VERSION
 
-version 1.02
+version 1.03
 
 # SYNOPSIS
 
@@ -1227,6 +1227,13 @@ you can set a scalar:
 
 Validation checks are done in asciibetical order.
 
+You can also use the [filters](https://metacpan.org/pod/Mojolicious%3A%3AValidator#FILTERS):
+
+    "validation" : {
+        "size" : [ 2, 5 ],
+        "filters" : [ "trim" ]
+    },
+
 ## Check a string for its length
 
 This is a simple check for the length of a string
@@ -1419,7 +1426,7 @@ The distribution is contained in a Git repository, so simply clone the
 repository
 
 ```
-$ git clone http://github.com/reneeb/Mojolicious-Plugin-FormFieldsFromJSON.git
+$ git clone https://github.com/reneeb/Mojolicious-Plugin-FormFieldsFromJSON.git
 ```
 
 and change into the newly-created directory.

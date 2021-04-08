@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious::Plugin';
 
 # ABSTRACT: create form fields based on a definition in a JSON file
 
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 use Carp;
 use File::Basename;
