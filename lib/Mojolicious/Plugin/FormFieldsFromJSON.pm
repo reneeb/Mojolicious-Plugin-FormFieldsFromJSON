@@ -2085,6 +2085,13 @@ you can set a scalar:
 
 Validation checks are done in asciibetical order.
 
+You can also use the L<filters|Mojolicious::Validator/FILTERS>:
+
+  "validation" : {
+      "size" : [ 2, 5 ],
+      "filters" : [ "trim" ]
+  },
+
 =head2 Check a string for its length
 
 This is a simple check for the length of a string
