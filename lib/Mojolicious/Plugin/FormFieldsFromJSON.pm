@@ -21,9 +21,6 @@ use Mojolicious ();
 
 has dir => sub { ["."] };
 
-my $selected_value = Mojolicious->VERSION < 6.16 ? 'selected' : undef;
-my $checked_value  = Mojolicious->VERSION < 6.16 ? 'checked'  : undef;
-
 sub register {
     my ( $self, $app, $config ) = @_;
 
@@ -125,7 +122,14 @@ sub register {
             my $params_hash = $c->req->params->to_hash;
             my @param_names = keys %{ $params_hash || {} };
 
-            my %params = map { $_ => $c->every_param($_) } @param_names;
+            my %params;
+            for my $name ( @param_names ) {
+                my $param_values = $c->every_param($name);
+
+                $params{$name} = @{$param_values || [] } > 1 ?
+                    $param_values : $param_values->[-1];
+            }
+
             $validation->input( \%params );
 
             my %errors;
@@ -146,11 +150,13 @@ sub register {
                     next FIELD;
                 }
 
+                my $filters = $field->{validation}->{filters};
+
                 my $name         = $field->{name} // $field->{label} // '';
                 my $global_error = 1;
 
                 if ( $field->{validation}->{required} ) {
-                    $validation->required($name);
+                    $validation->required($name, @{ $filters || [] });
 
                     my $value = $field->{validation}->{required};
                     if ( ref $value && 'HASH' eq ref $value ) {
@@ -158,7 +164,7 @@ sub register {
                     }
                 }
                 else {
-                    $validation->optional($name);
+                    $validation->optional($name, @{ $filters || [] });
                 }
 
                 RULE:
@@ -166,6 +172,7 @@ sub register {
                     last RULE if !defined $params{$name};
 
                     next RULE if $rule eq 'required';
+                    next RULE if $rule eq 'filters';
 
                     my $value  = $field->{validation}->{$rule};
                     my $ref    = ref $value;
@@ -551,8 +558,8 @@ sub _transform_hash_values {
         else {
             my %opts;
 
-            $opts{disabled} = 'disabled'      if $params{disabled}->{$key};
-            $opts{selected} = $selected_value if $params{selected}->{$key};
+            $opts{disabled} = 'disabled' if $params{disabled}->{$key};
+            $opts{selected} = undef      if $params{selected}->{$key};
 
             #$opts{selected} = undef if $params{selected}->{$key};
 
@@ -592,8 +599,8 @@ sub _transform_array_values {
 
         my %opts;
 
-        $opts{disabled} = 'disabled'      if $params{disabled}->{$value};
-        $opts{selected} = $selected_value if $params{selected}->{$value};
+        $opts{disabled} = 'disabled' if $params{disabled}->{$value};
+        $opts{selected} = undef      if $params{selected}->{$value};
 
         #$opts{selected} = undef if $params{selected}->{$value};
 
@@ -662,7 +669,7 @@ sub _radio {
         }
 
         if ( $select_params{selected}->{$radio_value} ) {
-            $value_attributes{checked} = $checked_value;
+            $value_attributes{checked} = undef;
         }
 
         my $local_label = '';
@@ -752,7 +759,7 @@ sub _checkbox {
         }
 
         if ( $select_params{selected}->{$checkbox_value} ) {
-            $value_attributes{checked} = $checked_value;
+            $value_attributes{checked} = undef;
         }
 
         my $local_label = '';
